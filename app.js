@@ -50,7 +50,7 @@ mongoose.connect(process.env.CONNECTION_STRING, {
 mongoose.set("useCreateIndex", true);
 
 //Server
-app.listen(3000, () => {
+app.listen(process.env.PORT || 80, () => {
 
-    console.log('server is running http://localhost:3000');
+    console.log('server is running http://localhost:80');
 })

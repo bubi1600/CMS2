@@ -103,7 +103,7 @@ router.post('/login', async (req, res) => {
 
 
 router.post('/register', async (req, res) => {
-    let({
+    let user = new User({
         name: req.body.name,
         email: req.body.email,
         passwordHash: bcrypt.hashSync(req.body.password, 10),
@@ -115,19 +115,6 @@ router.post('/register', async (req, res) => {
         city: req.body.city,
         country: req.body.country,
     })
-    const user = new User({
-        _id: new mongoose.default.Types.ObjectId(),
-        name,
-        email,
-        passwordHash: bcryptjs_1.default.hashSync(password, 10),
-        phone,
-        isAdmin,
-        street,
-        apartment,
-        zip,
-        city,
-        country,
-    });
     user = await user.save();
 
     if (!user)
