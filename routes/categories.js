@@ -12,12 +12,12 @@ router.get(`/`, async (req, res) => {
 })
 
 router.get('/:id', async (req, res) => {
-    const category = await Category.findById(req.params.id);
+    const _id = await Category.findById(req.params.id);
 
-    if (!category) {
+    if (!_id) {
         res.status(500).json({ message: 'The category with the given ID was not found.' })
     }
-    res.status(200).send(category);
+    res.status(200).send(_id);
 })
 
 
