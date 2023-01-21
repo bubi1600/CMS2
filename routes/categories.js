@@ -1,4 +1,4 @@
-const { Category } = require('../models/category');
+/*const { Category } = require('../models/category');
 const express = require('express');
 const { Mongoose } = require('mongoose');
 const router = express.Router();
@@ -70,4 +70,131 @@ router.delete('/:id', (req, res) => {
     })
 })
 
-module.exports = router;
+module.exports = router;*/
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var mongoose_1 = require("mongoose");
+var logging_1 = require("../config/logging");
+var category_1 = require("../models/category");
+var create = function (req, res, next) {
+    logging_1.default.info("Attempting to register category...");
+    var _a = req.body, name = _a.name, image = _a.image, icon = _a.icon, color = _a.color;
+    var category = new category_1.default({
+        _id: new mongoose_1.default.Types.ObjectId(),
+        name: name,
+        icon: icon,
+        color: color,
+        image: image,
+    });
+    return category
+        .save()
+        .then(function (newCategory) {
+            logging_1.default.info("New category created...");
+            return res.status(201).json({ category: newCategory });
+        })
+        .catch(function (error) {
+            logging_1.default.error(error);
+            return res.status(500).json({ error: error });
+        });
+};
+var read = function (req, res, next) {
+    var _id = req.params.categoryID;
+    logging_1.default.info("Incoming read for ".concat(_id, " ..."));
+    return category_1.default.findById(_id)
+        .then(function (category) {
+            if (category) {
+                return res.status(200).json({ category: category });
+            }
+            else {
+                return res.status(404).json({ message: "category not found" });
+            }
+        })
+        .catch(function (error) {
+            logging_1.default.error(error);
+            return res.status(500).json({ error: error });
+        });
+};
+var readAll = function (req, res, next) {
+    // const author_id = req.params.authorID;
+    logging_1.default.info("Incoming read all...");
+    return (category_1.default.find() // { author: author_id }
+        // .populate("author")
+        .exec()
+        .then(function (categories) {
+            return res.status(200).json({
+                count: categories.length,
+                categories: categories,
+            });
+        })
+        .catch(function (error) {
+            logging_1.default.error(error);
+            return res.status(500).json({ error: error });
+        }));
+};
+var query = function (req, res, next) {
+    var title = req.query.title;
+    var author_id = req.params.authorID;
+    logging_1.default.info("Incoming query...");
+    var titleRegex = title ? new RegExp(title.toString(), "i") : new RegExp("");
+    return category_1.default.find({ title: { $regex: titleRegex }, author: author_id })
+        .exec()
+        .then(function (categories) {
+            return res.status(200).json({
+                count: categories.length,
+                categories: categories,
+            });
+        })
+        .catch(function (error) {
+            logging_1.default.error(error);
+            return res.status(500).json({ error: error });
+        });
+};
+var update = function (req, res, next) {
+    var _id = req.params.categoryID;
+    logging_1.default.info("Incoming update for ".concat(_id, " ..."));
+    return category_1.default.findById(_id)
+        .exec()
+        .then(function (category) {
+            if (category) {
+                category.set(req.body);
+                category
+                    .save()
+                    .then(function (newCategory) {
+                        logging_1.default.info("Category updated...");
+                        return res.status(201).json({ category: newCategory });
+                    })
+                    .catch(function (error) {
+                        logging_1.default.error(error);
+                        return res.status(500).json({ error: error });
+                    });
+            }
+            else {
+                return res.status(404).json({ message: "category not found" });
+            }
+        })
+        .catch(function (error) {
+            logging_1.default.error(error);
+            return res.status(500).json({ error: error });
+        });
+};
+var deleteCategory = function (req, res, next) {
+    var _id = req.params.categoryID;
+    logging_1.default.info("Incoming delete for ".concat(_id, " ..."));
+    return category_1.default.findByIdAndDelete(_id)
+        .then(function (category) {
+            return res.status(200).json({ message: "Category was deleted." });
+        })
+        .catch(function (error) {
+            logging_1.default.error(error);
+            return res.status(500).json({ error: error });
+        });
+};
+exports.default = {
+    create: create,
+    read: read,
+    readAll: readAll,
+    query: query,
+    update: update,
+    deleteCategory: deleteCategory,
+};
