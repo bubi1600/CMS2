@@ -10,6 +10,13 @@ const categorySchema = mongoose.Schema({
     },
     color: {
         type: String,
+    },
+    image: {
+        type: String,
+    },
+    id: {
+        type: String,
+        unique: true,
     }
 })
 

@@ -1,5 +1,6 @@
 const { Category } = require('../models/category');
 const express = require('express');
+const { Mongoose } = require('mongoose');
 const router = express.Router();
 
 router.get(`/`, async (req, res) => {
@@ -24,9 +25,12 @@ router.get('/:id', async (req, res) => {
 
 router.post('/create', async (req, res) => {
     let category = new Category({
+        _id: new Mongoose.Types.ObjectId(),
         name: req.body.name,
         icon: req.body.icon,
-        color: req.body.color
+        color: req.body.color,
+        image: req.body.image,
+
     })
     category = await category.save();
 
