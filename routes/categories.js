@@ -3,26 +3,6 @@ const express = require('express');
 const { Mongoose } = require('mongoose');
 const router = express.Router();
 
-router.get(`/`, async (req, res) => {
-    const categoryList = await Category.find();
-
-    if (!categoryList) {
-        res.status(500).json({ success: false })
-    }
-    res.status(200).send(categoryList);
-})
-
-router.get('/:id', async (req, res) => {
-    const _id = await Category.findById(req.params.id);
-
-    if (!_id) {
-        res.status(500).json({ message: 'The category with the given ID was not found.' })
-    }
-    res.status(200).send(_id);
-})
-
-
-
 router.post('/create', async (req, res) => {
     let category = new Category({
         _id: new Mongoose.Types.ObjectId(),
@@ -47,8 +27,51 @@ router.post('/create', async (req, res) => {
     //return res.send(category.name, category._id);
 })
 
+router.get('/read/:categoryID', async (req, res) => {
+    const _id = await Category.findById(req.params.id);
 
-router.put('/:id', async (req, res) => {
+    if (!_id) {
+        res.status(500).json({ message: 'The category with the given ID was not found.' })
+    }
+    res.status(200).send(_id);
+})
+
+
+router.get(`/`, async (req, res) => {
+    const categoryList = await Category.find();
+
+    if (!categoryList) {
+        res.status(500).json({ success: false })
+    }
+    res.status(200).send(categoryList);
+})
+
+
+router.get('/query/:authorID', async (req, res) => {
+    const category = await Category.findById(
+        req.params.id,
+        {
+            title: req.query,
+            author_id: req.params.authorID,
+        })
+
+    const titleRegex = title ? new RegExp(title.toString(), "i") : new RegExp("");
+    return Category.find({ title: { $regex: titleRegex }, author: author_id })
+        .exec()
+        .then((categories) => {
+            return res.status(200).json({
+                count: categories.length,
+                categories,
+            })
+        })
+        .catch((error) => {
+            logging.error(error);
+            return res.status(500).json({ error });
+        });
+})
+
+
+router.patch('/update/:categoryID', async (req, res) => {
     const category = await Category.findByIdAndUpdate(
         req.params.id,
         {
@@ -65,7 +88,8 @@ router.put('/:id', async (req, res) => {
     res.send(category);
 })
 
-router.delete('/:id', (req, res) => {
+
+router.delete('/:categoryID', (req, res) => {
     Category.findByIdAndRemove(req.params.id).then(category => {
         if (category) {
             return res.status(200).json({ success: true, message: 'the category is deleted!' })
