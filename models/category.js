@@ -14,7 +14,7 @@ const categorySchema = mongoose.Schema({
     image: {
         type: String,
     },
-    _id: {
+    id: {
         type: String,
         unique: true,
     }
