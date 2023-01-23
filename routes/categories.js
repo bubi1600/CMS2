@@ -16,7 +16,7 @@ router.post('/create', async (req, res) => {
     category = await category.save();
 
     if (!category)
-        return res.status(400).send('the category cannot be created!')
+        return res.status(400).json({ message: err.message }).send('the category cannot be created!')
 
     return res.send(category.name, category._id);
 })
@@ -27,7 +27,7 @@ router.get('/read/:categoryID', async (req, res) => {
     if (!_id) {
         res.status(500).json({ message: 'The category with the given ID was not found.' })
     }
-    res.status(200).send(_id);
+    res.status(200).send(_id).json({ message: err.message });
 })
 
 
@@ -37,7 +37,7 @@ router.get(`/`, async (req, res) => {
     if (!categoryList) {
         res.status(500).json({ success: false })
     }
-    res.status(200).send(categoryList);
+    res.status(200).json({ message: err.message }).send(categoryList);
 })
 
 
@@ -77,7 +77,7 @@ router.patch('/update/:categoryID', async (req, res) => {
     )
 
     if (!category)
-        return res.status(400).send('the category cannot be created!')
+        return res.status(400).json({ message: err.message }).send('the category cannot be created!')
 
     res.send(category);
 })
