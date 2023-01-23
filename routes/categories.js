@@ -5,26 +5,20 @@ const router = express.Router();
 
 router.post('/create', async (req, res) => {
     let category = new Category({
-        _id: new Mongoose.Types.ObjectId(),
+        _id: req.body.id,
         name: req.body.name,
         icon: req.body.icon,
         color: req.body.color,
         image: req.body.image,
 
     })
-    return category
-        .save()
-        .then((newCategory) => {
-            return res.send({ category: newCategory })
-        })
-        //category = await category.save();
-        .catch((error) => {
-            return res.status(500).send({ error })
-        });
-    //if (!category)
-    //    return res.status(400).send('the category cannot be created!')
 
-    //return res.send(category.name, category._id);
+    category = await category.save();
+
+    if (!category)
+        return res.status(400).send('the category cannot be created!')
+
+    return res.send(category.name, category._id);
 })
 
 router.get('/read/:categoryID', async (req, res) => {
