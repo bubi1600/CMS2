@@ -65,7 +65,7 @@ router.post(`/create`, uploadOptions.single('image'), async (req, res) => {
     let product = new Product({
         name: req.body.name,
         description: req.body.description,
-        image: `${basePath}${fileName}`, // "http://localhost:3000/public/upload/image-2323232"
+        image: req.body.image, // `${basePath}${fileName}`, // "http://localhost:3000/public/upload/image-2323232"
         brand: req.body.brand,
         price: req.body.price,
         //category: req.body.category,
