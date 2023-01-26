@@ -55,6 +55,10 @@ const productSchema = mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    id: {
+        type: String,
+        unique: true
+    },
 })
 
 productSchema.method('toJSON', function () {

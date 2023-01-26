@@ -25,6 +25,7 @@ const usersRoutes = require('./routes/users');
 const ordersRoutes = require('./routes/orders');
 
 const api = process.env.API_URL;
+const PORT = process.env.PORT || 3000
 
 app.use(`${api}/categories`, categoriesRoutes);
 app.use(`${api}/products`, productsRoutes);
@@ -50,7 +51,7 @@ mongoose.connect(process.env.CONNECTION_STRING, {
 mongoose.set("useCreateIndex", true);
 
 //Server
-app.listen(process.env.PORT || 3000, () => {
+app.listen(PORT, () => {
 
-    console.log('server is running http://localhost:80');
+    console.log('server is running at: ', PORT);
 })

@@ -53,7 +53,7 @@ router.get(`/:id`, async (req, res) => {
     res.send(product);
 });
 
-router.post(`/`, uploadOptions.single('image'), async (req, res) => {
+router.post(`/create`, uploadOptions.single('image'), async (req, res) => {
     const category = await Category.findById(req.body.category);
     if (!category) return res.status(400).send('Invalid Category');
 
@@ -203,3 +203,4 @@ router.put(
 );
 
 module.exports = router;
+
