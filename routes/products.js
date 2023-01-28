@@ -32,9 +32,9 @@ const uploadOptions = multer({ storage: storage });
 
 router.get(`/`, async (req, res) => {
     let filter = {};
-    //if (req.query.categories) {
-    //    filter = { category: req.query.categories.split(',') };
-    //}
+    if (req.query.products) {//if (req.query.categories) {
+        filter = { products: req.query.products.split(',') };//    filter = { category: req.query.categories.split(',') };
+    }//}
 
     const productList = await Product.find(filter).populate('product')//.populate('category');
 
