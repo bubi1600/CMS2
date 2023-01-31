@@ -32,7 +32,7 @@ router.post('/create', async (req, res) => {
 
 
 router.get('/read/:categoryID', async (req, res) => {
-    const category = await Category.findById(req.params.id);
+    const category = await Category.findById(req.params.id).trim();
 
     if (!category) {
         res.status(500).json({ message: 'The category with the given ID was not found.' })
