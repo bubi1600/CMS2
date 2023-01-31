@@ -5,20 +5,20 @@ const router = express.Router();
 
 router.post('/create', async (req, res) => {
     let category = new Category({
-        _id: req.body.id,
+        //_id: req.body.id,
         name: req.body.name,
-        icon: req.body.icon,
-        color: req.body.color,
-        image: req.body.image,
+        //icon: req.body.icon,
+        //color: req.body.color,
+        //image: req.body.image,
 
     })
 
     category = await category.save();
 
     if (!category)
-        return res.status(400).json({ message: err.message }).send('the category cannot be created!')
+        return res.status(400).send('the category cannot be created!')
 
-    return res.send(category.name, category._id);
+    res.send(category);
 })
 
 router.get('/read/:categoryID', async (req, res) => {
@@ -37,10 +37,7 @@ router.get('/', async (req, res) => {
     if (!categoryList) {
         res.status(500).json({ success: false })
     }
-    res.status(200)/*.send(categoryList)*/.json({
-        count: categoryList.length,
-        categoryList,
-    });
+    res.status(200).send(categoryList);
 })
 
 
