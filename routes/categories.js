@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post('/create', async (req, res) => {
     let category = new Category({
-        _id: req.body.id,
+        //_id: req.body.id,
         name: req.body.name,
         //icon: req.body.icon,
         //color: req.body.color,
@@ -22,12 +22,12 @@ router.post('/create', async (req, res) => {
 })
 
 router.get('/read/:categoryID', async (req, res) => {
-    const _id = await Category.findById(req.params.id);
+    const category = await Category.findById(req.params.id);
 
-    if (!_id) {
+    if (!category) {
         res.status(500).json({ message: 'The category with the given ID was not found.' })
     }
-    res.status(200).send(_id).json({ message: err.message });
+    res.status(200).send(category);
 })
 
 
