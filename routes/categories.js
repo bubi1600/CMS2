@@ -37,7 +37,7 @@ router.get('/read/:categoryID', async (req, res) => {
     if (!category) {
         res.status(500).json({ message: 'The category with the given ID was not found.' })
     }
-    res.status(200).send(category);
+    res.status(200).json({ category });
 })
 
 
