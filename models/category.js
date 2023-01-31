@@ -13,11 +13,11 @@ const categorySchema = mongoose.Schema({
     },
     image: {
         type: String,
-    },
+    },*/
     id: {
         type: String,
         unique: true,
-    }*/
+    }
 })
 
 
