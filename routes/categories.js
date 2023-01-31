@@ -37,7 +37,7 @@ router.get(`/`, async (req, res) => {
     if (!categories) {
         res.status(500).json({ success: false })
     }
-    res.status(200).send(categories);
+    res.status(200).json({ categories });
 })
 
 
