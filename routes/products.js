@@ -54,7 +54,6 @@ router.post(`/create`, uploadOptions.single('image'), async (req, res) => {
     const fileName = file.filename;
     const basePath = `${req.protocol}://${req.get('host')}/tmp`;
     let product = new Product({
-        _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
         description: req.body.description,
         image: `${basePath}${fileName}`, // "http://localhost:3000/public/upload/image-2323232"
