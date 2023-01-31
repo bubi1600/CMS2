@@ -31,13 +31,13 @@ router.get('/read/:categoryID', async (req, res) => {
 })
 
 
-router.get('/', async (req, res) => {
-    const categoryList = await Category.find();
+router.get(`/`, async (req, res) => {
+    const categories = await Category.find();
 
-    if (!categoryList) {
+    if (!categories) {
         res.status(500).json({ success: false })
     }
-    res.status(200).send(categoryList);
+    res.status(200).send(categories);
 })
 
 
