@@ -54,8 +54,8 @@ router.get(`/:id`, async (req, res) => {
 });
 
 router.post(`/create`, uploadOptions.single('image'), async (req, res) => {
-    //const category = await Category.findById(req.body.category);
-    //if (!category) return res.status(400).send('Invalid Category');
+    const category = await Category.findById(req.body.category);
+    if (!category) return res.status(400).send('Invalid Category');
 
     const file = req.file;
     if (!file) return res.status(400).send('No image in the request');
@@ -68,7 +68,7 @@ router.post(`/create`, uploadOptions.single('image'), async (req, res) => {
         image: `${basePath}${fileName}`, // "http://localhost:3000/public/upload/image-2323232"
         brand: req.body.brand,
         price: req.body.price,
-        //category: req.body.category,
+        category: req.body.category,
     });
 
     product = await product.save();
