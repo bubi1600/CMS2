@@ -21,15 +21,6 @@ router.post('/create', async (req, res) => {
     res.send(category);
 })
 
-router.get('/read/:categoryID', async (req, res) => {
-    const category = await Category.findById(req.params.id);
-
-    if (!category) {
-        res.status(500).json({ message: 'The category with the given ID was not found.' })
-    }
-    res.status(200).send(category);
-})
-
 
 router.get(`/`, async (req, res) => {
     const categories = await Category.find();
@@ -38,6 +29,16 @@ router.get(`/`, async (req, res) => {
         res.status(500).json({ success: false })
     }
     res.status(200).json({ categories });
+})
+
+
+router.get('/read/:categoryID', async (req, res) => {
+    const category = await Category.findById(req.params.id);
+
+    if (!category) {
+        res.status(500).json({ message: 'The category with the given ID was not found.' })
+    }
+    res.status(200).send(category);
 })
 
 
