@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post('/create', async (req, res) => {
     let category = new Category({
-        //_id: req.body.id,
+        _id: req.body.id,
         name: req.body.name,
         //icon: req.body.icon,
         //color: req.body.color,
