@@ -14,13 +14,13 @@ const productSchema = mongoose.Schema({
         data: Buffer,
         default: ''
     },
-    images: [{
-        type: String
-    }],
-    brand: {
-        type: String,
-        default: ''
-    },
+    /* images: [{
+         type: String
+     }],
+     brand: {
+         type: String,
+         default: ''
+     },*/
     price: {
         type: Number,
         default: 0

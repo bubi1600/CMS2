@@ -36,12 +36,12 @@ router.get(`/`, async (req, res) => {
         filter = { category: req.query.categories.split(',') };
     }
 
-    const productList = await Product.find(filter).populate('category');
+    const products = await Product.find(filter).populate('category');
 
-    if (!productList) {
+    if (!products) {
         res.status(500).json({ success: false });
     }
-    res.json({ productList });
+    res.json({ products });
 });
 
 router.get(`/find/:id`, async (req, res) => {
@@ -69,7 +69,7 @@ router.post(`/create`, uploadOptions.single('image'), async (req, res) => {
         image: `${basePath}${fileName}`, // "http://localhost:3000/public/upload/image-2323232"
         //brand: req.body.brand,
         price: req.body.price,
-        category: req.body.category,//.split(",").map(category => ObjectId(category)),
+        category: req.body.category,
     });
 
     product = await product.save();
