@@ -41,7 +41,7 @@ router.get(`/`, async (req, res) => {
     if (!productList) {
         res.status(500).json({ success: false });
     }
-    res.send(productList);
+    res.json({ productList });
 });
 
 router.post(`/create`, uploadOptions.single('image'), async (req, res) => {
