@@ -54,9 +54,7 @@ router.get(`/find/:id`, async (req, res) => {
 });
 
 router.post(`/create`, uploadOptions.single('image'), async (req, res) => {
-    if (id.match(/^[0-9a-fA-F]{24}$/)) {
-        // Yes, it's a valid ObjectId, proceed with `findById` call.
-    }
+
     const category = await Category.findById(req.body.category);
     if (!category) return res.status(400).send('Invalid Category');
 
