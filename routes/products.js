@@ -76,7 +76,7 @@ router.post(`/create`, uploadOptions.single('image'), async (req, res) => {
 
     if (!product) return res.status(500).send('The product cannot be created');
 
-    res.send(product);
+    res.json({ product });
 });
 
 router.put('/:id', uploadOptions.single('image'), async (req, res) => {
