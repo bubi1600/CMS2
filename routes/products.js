@@ -44,7 +44,7 @@ router.get(`/`, async (req, res) => {
     res.json({ products });
 });
 
-router.get(`/find/:id`, async (req, res) => {
+router.get(`/read/:productID`, async (req, res) => {
     const product = await Product.findById(req.params.id).populate('category');
 
     if (!product) {
