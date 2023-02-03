@@ -69,7 +69,7 @@ router.post(`/create`, uploadOptions.single('image'), async (req, res) => {
         image: `${basePath}${fileName}`, // "http://localhost:3000/public/upload/image-2323232"
         //brand: req.body.brand,
         price: req.body.price,
-        category: Category.findByName(req.body.category),
+        category: Category.findById(req.body.category),
     });
 
     product = await product.save();
