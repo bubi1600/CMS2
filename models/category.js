@@ -15,8 +15,7 @@ const categorySchema = mongoose.Schema({
         type: String,
     },*/
     id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category',
+        type: String,
         unique: true,
     }
 })
