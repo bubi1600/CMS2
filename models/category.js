@@ -5,6 +5,10 @@ const categorySchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    _id: {
+        type: String,
+        unique: true,
+    }
     /*icon: {
         type: String,
     },
@@ -13,11 +17,11 @@ const categorySchema = mongoose.Schema({
     },
     image: {
         type: String,
-    },*/
+    },
     id: {
         type: String,
         unique: true,
-    }
+    }*/
 })
 
 
