@@ -44,7 +44,7 @@ router.get(`/`, async (req, res) => {
     res.json({ productList });
 });
 
-router.get(`/:id`, async (req, res) => {
+router.get(`/find/:id`, async (req, res) => {
     const product = await Product.findById(req.params.id).populate('category');
 
     if (!product) {
@@ -63,7 +63,6 @@ router.post(`/create`, uploadOptions.single('image'), async (req, res) => {
     const fileName = file.filename;
     const basePath = `${req.protocol}://${req.get('host')}/tmp`;
     let product = new Product({
-        _id: new mongoose.Types.ObjectId("hexString"),
         name: req.body.name,
         description: req.body.description,
         image: `${basePath}${fileName}`, // "http://localhost:3000/public/upload/image-2323232"
@@ -79,7 +78,7 @@ router.post(`/create`, uploadOptions.single('image'), async (req, res) => {
     res.json({ product });
 });
 
-router.put('/:id', uploadOptions.single('image'), async (req, res) => {
+router.put('/find/:id', uploadOptions.single('image'), async (req, res) => {
     if (!mongoose.isValidObjectId(req.params.id)) {
         return res.status(400).send('Invalid Product Id');
     }
