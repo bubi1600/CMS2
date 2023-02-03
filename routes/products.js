@@ -54,7 +54,7 @@ router.get(`/find/:id`, async (req, res) => {
 });
 
 router.post(`/create`, uploadOptions.single('image'), async (req, res) => {
-    const category = await Category.findById(req.body.category);
+    const category = await Category.findById(req.params.id);
     if (!category) return res.status(400).send('Invalid Category');
 
     const file = req.file;
@@ -68,7 +68,7 @@ router.post(`/create`, uploadOptions.single('image'), async (req, res) => {
         image: `${basePath}${fileName}`, // "http://localhost:3000/public/upload/image-2323232"
         //brand: req.body.brand,
         price: req.body.price,
-        category: mongoose.Types.ObjectId(result._id),
+        category: req.body.category,
     });
 
     product = await product.save();
