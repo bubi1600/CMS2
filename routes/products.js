@@ -68,7 +68,7 @@ router.post(`/create`, uploadOptions.single('image'), async (req, res) => {
         image: `${basePath}${fileName}`, // "http://localhost:3000/public/upload/image-2323232"
         //brand: req.body.brand,
         price: req.body.price,
-        category: req.body.category,
+        category: mongoose.Types.ObjectId(result._id),
     });
 
     product = await product.save();
