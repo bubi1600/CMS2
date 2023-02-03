@@ -44,9 +44,18 @@ router.get(`/`, async (req, res) => {
     res.json({ productList });
 });
 
+router.get(`/:id`, async (req, res) => {
+    const product = await Product.findById(req.params.id).populate('category');
+
+    if (!product) {
+        res.status(500).json({ success: false });
+    }
+    res.send(product);
+});
+
 router.post(`/create`, uploadOptions.single('image'), async (req, res) => {
-    const category = await Category.findById(req.body.category);
-    if (!category) return res.status(400).send('Invalid Category');
+    //const category = await Category.findById(req.body.category);
+    //if (!category) return res.status(400).send('Invalid Category');
 
     const file = req.file;
     if (!file) return res.status(400).send('No image in the request');
@@ -59,23 +68,13 @@ router.post(`/create`, uploadOptions.single('image'), async (req, res) => {
         image: `${basePath}${fileName}`, // "http://localhost:3000/public/upload/image-2323232"
         //brand: req.body.brand,
         price: req.body.price,
-        category: req.body.name,
+        category: req.body.category,
     });
 
     product = await product.save();
 
     if (!product) return res.status(500).send('The product cannot be created');
 
-    res.send(product);
-});
-
-
-router.get(`/:id`, async (req, res) => {
-    const product = await Product.findById(req.params.id).populate('category');
-
-    if (!product) {
-        res.status(500).json({ success: false });
-    }
     res.send(product);
 });
 
