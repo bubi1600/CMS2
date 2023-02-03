@@ -5,10 +5,6 @@ const categorySchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    _id: {
-        type: String,
-        unique: true,
-    }
     /*icon: {
         type: String,
     },
