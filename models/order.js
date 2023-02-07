@@ -45,7 +45,7 @@ const orderSchema = mongoose.Schema({
         type: Date,
         default: Date.now,
     },
-    _id: {
+    id: {
         type: String,
         unique: true
     }
