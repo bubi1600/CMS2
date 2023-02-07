@@ -29,11 +29,11 @@ const orderSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    status: {
+    /*status: {
         type: String,
         required: true,
         default: 'Pending',
-    },
+    },*/
     totalPrice: {
         type: Number,
     },
@@ -45,6 +45,10 @@ const orderSchema = mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    _id: {
+        type: String,
+        unique: true
+    }
 })
 
 orderSchema.virtual('id').get(function () {
