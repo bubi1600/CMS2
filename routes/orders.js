@@ -27,7 +27,7 @@ router.get(`/:id`, async (req, res) => {
     res.send(order);
 })
 
-router.post('/', async (req, res) => {
+router.post('/create', async (req, res) => {
     const orderItemsIds = Promise.all(req.body.orderItems.map(async (orderItem) => {
         let newOrderItem = new OrderItem({
             quantity: orderItem.quantity,
