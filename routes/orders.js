@@ -57,7 +57,7 @@ router.post('/create', async (req, res) => {
         phone: req.body.phone,
         orderItems: orderItemsIdsResolved,
         //status: req.body.status,
-        //totalPrice: totalPrice,
+        totalPrice: totalPrice,
         user: req.body.user,
     })
     order = await order.save();
@@ -65,7 +65,7 @@ router.post('/create', async (req, res) => {
     if (!order)
         return res.status(400).send('the order cannot be created!')
 
-    res.send(order);
+    res.json({ order });
 })
 
 
