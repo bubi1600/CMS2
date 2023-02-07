@@ -4,7 +4,7 @@ const { OrderItem } = require('../models/order-item');
 const router = express.Router();
 
 router.post('/create', async (req, res) => {
-    const orderItemsIds = Promise.all(req.body.orderItems.map(async (orderItem: IOrderItem) => {
+    const orderItemsIds = Promise.all(req.body.orderItems.map(async (orderItem) => {
         let newOrderItem = new OrderItem({
             quantity: orderItem.quantity,
             product: orderItem.product
