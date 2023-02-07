@@ -4,7 +4,7 @@ const { OrderItem } = require('../models/order-item');
 const router = express.Router();
 
 router.post('/create', async (req, res) => {
-    const orderItemsIds = Promise.all(req.body.orderItems.map(async (orderItem) => {
+    const orderItemsIds = Promise.all(req.body.orderItems.map(async (orderItem: IOrderItem) => {
         let newOrderItem = new OrderItem({
             quantity: orderItem.quantity,
             product: orderItem.product
@@ -16,13 +16,13 @@ router.post('/create', async (req, res) => {
     }))
     const orderItemsIdsResolved = await orderItemsIds;
 
-    const totalPrices = await Promise.all(orderItemsIdsResolved.map(async (orderItemId) => {
+    const orderTotalPrices = await Promise.all(orderItemsIdsResolved.map(async (orderItemId) => {
         const orderItem = await OrderItem.findById(orderItemId).populate('product', 'price');
         const totalPrice = orderItem.product.price * orderItem.quantity;
         return totalPrice
     }))
 
-    const totalPrice = totalPrices.reduce((a, b) => a + b, 0);
+    const orderTotalPrice = orderTotalPrices.reduce((a, b) => a + b, 0);
 
     let order = new Order({
         shippingAddress1: req.body.shippingAddress1,
@@ -33,7 +33,7 @@ router.post('/create', async (req, res) => {
         phone: req.body.phone,
         orderItems: orderItemsIdsResolved,
         //status: req.body.status,
-        totalPrice: totalPrice,
+        totalPrice: orderTotalPrice,
         user: req.body.user,
     })
     order = await order.save();
