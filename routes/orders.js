@@ -36,11 +36,12 @@ router.post('/create', async (req, res) => {
         totalPrice: orderTotalPrice,
         user: req.body.user,
     })
-    order = await order.save();
-
     if (!mongoose.Types.ObjectId.isValid(order)) {
         order = order.replace(/\s/g, '');
     }
+    order = await order.save();
+
+
 
     if (!order)
         return res.status(400).send('the order cannot be created!')
