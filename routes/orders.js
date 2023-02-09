@@ -25,7 +25,6 @@ router.post('/create', async (req, res) => {
     const orderTotalPrice = orderTotalPrices.reduce((a, b) => a + b, 0);
 
     let order = new Order({
-        _id: new mongoose.Types.ObjectId(),
         shippingAddress1: req.body.shippingAddress1,
         shippingAddress2: req.body.shippingAddress2,
         city: req.body.city,
@@ -42,7 +41,7 @@ router.post('/create', async (req, res) => {
     if (!order)
         return res.status(400).send('the order cannot be created!')
 
-    res.json({ order });
+    res.json({ order: newOrder });
 })
 
 router.get(`/`, async (req, res) => {
