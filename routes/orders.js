@@ -2,6 +2,7 @@ const { Order } = require('../models/order');
 const express = require('express');
 const { OrderItem } = require('../models/order-item');
 const router = express.Router();
+const mongoose = require('mongoose');
 
 router.post('/create', async (req, res) => {
     const orderItemsIds = Promise.all(req.body.orderItems.map(async (orderItem) => {

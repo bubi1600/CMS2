@@ -2,6 +2,7 @@ const { Category } = require('../models/category');
 const express = require('express');
 const { Mongoose } = require('mongoose');
 const router = express.Router();
+const mongoose = require('mongoose');
 
 router.get(`/`, async (req, res) => {
     const categories = await Category.find();
