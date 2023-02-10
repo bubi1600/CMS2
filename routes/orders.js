@@ -52,7 +52,7 @@ router.get(`/`, async (req, res) => {
     if (!orderList) {
         res.status(500).json({ success: false })
     }
-    res.json(orderList);
+    res.json({ orderList });
 })
 
 router.get(`/read/:orderID`, async (req, res) => {
@@ -67,7 +67,7 @@ router.get(`/read/:orderID`, async (req, res) => {
     if (!order) {
         res.status(500).json({ success: false })
     }
-    res.json(order);
+    res.json({ order });
 })
 
 
