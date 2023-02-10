@@ -17,7 +17,9 @@ router.post('/create', async (req, res) => {
     const orderItemsIdsResolved = await orderItemsIds;
 
     const orderTotalPrices = await Promise.all(orderItemsIdsResolved.map(async (orderItemId) => {
-        const orderItem = await OrderItem.findById(orderItemId).populate('product', 'price');
+        if (mongoose.Types.ObjectId.isValid(newOrderItem._id)) {
+            const orderItem = await OrderItem.findById(orderItemId).populate('product', 'price');
+        }
         const totalPrice = orderItem.product.price * orderItem.quantity;
         return totalPrice
     }))
