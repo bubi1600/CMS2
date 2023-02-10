@@ -55,7 +55,7 @@ router.get(`/`, async (req, res) => {
     res.json(orderList);
 })
 
-router.get(`/:id`, async (req, res) => {
+router.get(`/read/:orderID`, async (req, res) => {
     const order = await Order.findById(req.params.id)
         .populate('user', 'name')
         .populate({
