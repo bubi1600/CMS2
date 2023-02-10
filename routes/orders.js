@@ -131,12 +131,12 @@ router.get(`/:userID`, async (req, res) => {
         path: 'orderItems', populate: {
             path: 'product', populate: 'category'
         }
-    }).sort({ 'dateOrdered': -1 }).exec();
+    }).sort({ 'dateOrdered': -1 });
 
     if (!orders) {
         res.status(500).json({ success: false })
     }
-    res.json({ count: orders.length, orders });
+    res.status.json({ count: orders.length, orders });
 })
 
 
