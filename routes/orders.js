@@ -17,9 +17,7 @@ router.post('/create', async (req, res) => {
     const orderItemsIdsResolved = await orderItemsIds;
 
     const orderTotalPrices = await Promise.all(orderItemsIdsResolved.map(async (orderItemId) => {
-        if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-            const orderItem = await OrderItem.findById(orderItemId).populate('product', 'price');
-        }
+        const orderItem = await OrderItem.findById(orderItemId).populate('product', 'price');
         const totalPrice = orderItem.product.price * orderItem.quantity;
         return totalPrice
     }))
@@ -27,6 +25,7 @@ router.post('/create', async (req, res) => {
     const orderTotalPrice = orderTotalPrices.reduce((a, b) => a + b, 0);
 
     let order = new Order({
+        _id: new mongoose.Types.ObjectId(),
         shippingAddress1: req.body.shippingAddress1,
         shippingAddress2: req.body.shippingAddress2,
         city: req.body.city,
