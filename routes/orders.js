@@ -67,7 +67,7 @@ router.get(`/read/:orderID`, async (req, res) => {
     if (!order) {
         res.status(500).json({ success: false })
     }
-    res.send(order);
+    res.json(order);
 })
 
 
