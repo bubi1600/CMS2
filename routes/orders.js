@@ -127,6 +127,11 @@ router.get(`/get/count`, async (req, res) => {
 })
 
 router.get(`/:userID`, async (req, res) => {
+    const _id = req.params.userID;
+    if (!mongoose.isValidObjectId(_id)) {
+        return res.status(400).send("Invalid Order Id");
+    }
+
     const orders = await Order.find({ user: _id }).populate({
         path: 'orderItems', populate: {
             path: 'product', populate: 'category'
