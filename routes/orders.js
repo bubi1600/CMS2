@@ -127,7 +127,7 @@ router.get(`/get/count`, async (req, res) => {
 })
 
 router.get(`/:userID`, async (req, res) => {
-    const orders = await Order.find({ user: req.params.userid }).populate({
+    const orders = await Order.find({ user: _id }).populate({
         path: 'orderItems', populate: {
             path: 'product', populate: 'category'
         }
@@ -136,7 +136,7 @@ router.get(`/:userID`, async (req, res) => {
     if (!orders) {
         res.status(500).json({ success: false })
     }
-    res.json(JSON.stringify({ count: orders.length, orders }));
+    res.json({ count: orders.length, orders });
 })
 
 
