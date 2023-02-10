@@ -43,7 +43,7 @@ router.post('/create', async (req, res) => {
     if (!order)
         return res.status(400).send('the order cannot be created!')
 
-    res.json({ order: newOrder });
+    res.json({ order });
 })
 
 router.get(`/`, async (req, res) => {
