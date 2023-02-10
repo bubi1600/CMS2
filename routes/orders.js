@@ -136,7 +136,7 @@ router.get(`/:userID`, async (req, res) => {
     if (!userOrderList) {
         res.status(500).json({ success: false })
     }
-    res.json({ userOrderList, count: userOrderList.length });
+    res.json({ count: userOrderList.length, userOrderList });
 })
 
 
