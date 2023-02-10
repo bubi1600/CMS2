@@ -9,10 +9,10 @@ const orderItemSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product'
     },
-    /*id: {
+    id: {
         type: String,
         unique: true
-    }*/
+    }
 })
 
 exports.OrderItem = mongoose.model('OrderItem', orderItemSchema);

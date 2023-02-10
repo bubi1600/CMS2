@@ -14,6 +14,7 @@ router.get(`/`, async (req, res) => {
 
 router.post('/create', async (req, res) => {
     let category = new Category({
+        _id: new mongoose.Types.ObjectId(),
         //_id: req.body.id,
         name: req.body.name,
         //icon: req.body.icon,
