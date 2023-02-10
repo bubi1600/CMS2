@@ -136,7 +136,7 @@ router.get(`/:userID`, async (req, res) => {
     if (!orders) {
         res.status(500).json({ success: false })
     }
-    res.status.json({ count: orders.length, orders });
+    res.JSON.sringify({ count: orders.length, orders });
 })
 
 
