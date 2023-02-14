@@ -13,4 +13,18 @@ router.get('/inventory', async (req, res) => {
   }
 });
 
+router.get('/orderQuantity/:qrCode', async (req, res) => {
+  try {
+    const qrCode = req.params.qrCode;
+    const updatedOrder = await Order.findOneAndUpdate({ qrCode: qrCode }, { $inc: { quantity: -1 } }, { new: true });
+    if (!updatedOrder) {
+      res.status(404).send({ message: 'Order not found' });
+    } else {
+      res.send({ message: 'Quantity updated successfully' });
+    }
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
+});
+
 module.exports = router;
