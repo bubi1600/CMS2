@@ -5,13 +5,10 @@ const { Product } = require('../models/product');
 
 router.get('/:userID', async (req, res) => {
   try {
-    const userOrders = await Order.find({ user: req.params.userId }).populate({
+    const userOrders = await Order.find({ user: req.params.userID }).populate({
       path: 'orderItems',
       populate: {
         path: 'product'
-      },
-      populate: {
-        path: 'quantity'
       }
     });
 
@@ -28,7 +25,7 @@ router.get('/:userID', async (req, res) => {
     console.log(err);
     res.status(500).json({ message: 'An error occurred while retrieving the total quantity.' });
   }
-})
+});
 
 
 /*router.get('/', async (req, res) => {
