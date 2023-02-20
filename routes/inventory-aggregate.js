@@ -7,7 +7,7 @@ router.get('/inventory', async (req, res) => {
     const totalQuantity = await Order.aggregate([
       { $group: { _id: null, totalQuantity: { $sum: "$quantity" } } }
     ]);
-    res.send({ quantity: totalQuantity[0].totalQuantity });
+    res.json({ quantity: totalQuantity[0].totalQuantity });
   } catch (err) {
     res.status(500).send({ message: err.message });
   }
