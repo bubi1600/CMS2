@@ -3,7 +3,7 @@ const router = express.Router();
 const { Order } = require('../models/order');
 const { Product } = require('../models/product');
 
-router.get('/inventory/:userId', async (req, res) => {
+router.get('/', async (req, res) => {
   const userId = req.params.userId;
   try {
     const orders = await Order.find({ user: userId }).populate('product');
