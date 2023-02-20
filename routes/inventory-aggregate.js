@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Order } = require('../models/order');
 
-router.get('/inventory/:userID', async (req, res) => {
+/*router.get('/inventory/:userID', async (req, res) => {
   try {
     const totalQuantity = await Order.aggregate([
       { $group: { _id: "$user", totalQuantity: { $sum: "$quantity" } } }
@@ -11,22 +11,20 @@ router.get('/inventory/:userID', async (req, res) => {
   } catch (err) {
     res.status(500).send({ message: err.message });
   }
-});
+});*/
 
-/*router.get(`/inventory/:orderID`, async (req, res) => {
+router.get(`/inventory/:orderID`, async (req, res) => {
   const order = await Order.findById(req.params.id)
     .populate('user', 'name')
     .populate({
-      path: 'orderItems', populate: {
-        populate: 'quantity'
-      }
+      path: 'orderItems', populate: ('quantity')
     });
 
   if (!order) {
     res.status(500).json({ success: false })
   }
   res.json({ order });
-})*/
+})
 
 router.get('/orderQuantity/:qrCode', async (req, res) => {
   try {
