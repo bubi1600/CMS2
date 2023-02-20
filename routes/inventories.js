@@ -3,7 +3,7 @@ const router = express.Router();
 const { Order } = require('../models/order');
 const { Product } = require('../models/product');
 
-/*router.get('/', async (req, res) => {
+router.get('/:userID', async (req, res) => {
   try {
     const userOrders = await Order.find({ user: req.params.userId }).populate({
       path: 'orderItems',
@@ -28,7 +28,7 @@ const { Product } = require('../models/product');
     console.log(err);
     res.status(500).json({ message: 'An error occurred while retrieving the total quantity.' });
   }
-})*/
+})
 
 
 /*router.get('/', async (req, res) => {
@@ -48,7 +48,7 @@ const { Product } = require('../models/product');
   }
 });*/
 
-router.get('/:userID', async (req, res) => {
+/*router.get('/:userID', async (req, res) => {
   try {
     const totalQuantity = await Order.aggregate([
       { $group: { _id: "$user", totalQuantity: { $sum: "$quantity" } } }
@@ -57,7 +57,7 @@ router.get('/:userID', async (req, res) => {
   } catch (err) {
     res.status(500).send({ message: err.message });
   }
-});
+});*/
 
 
 router.get('/orderQuantity/:qrCode', async (req, res) => {
