@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Order } = require('../models/order');
 
-router.get('/inventory', async (req, res) => {
+router.get('/inventory/:userID', async (req, res) => {
   try {
     const totalQuantity = await Order.aggregate([
       { $group: { _id: "$user", totalQuantity: { $sum: "$quantity" } } }
