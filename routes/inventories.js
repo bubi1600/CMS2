@@ -31,7 +31,7 @@ const { Product } = require('../models/product');
 })*/
 
 
-router.get('/', async (req, res) => {
+/*router.get('/', async (req, res) => {
   const userId = req.params.userId;
   try {
     const orders = await Order.find({ user: userId }).populate('product');
@@ -46,9 +46,9 @@ router.get('/', async (req, res) => {
     console.error(err);
     res.status(500).json({ error: 'An error occurred' });
   }
-});
+});*/
 
-/*router.get('/:userID', async (req, res) => {
+router.get('/:userID', async (req, res) => {
   try {
     const totalQuantity = await Order.aggregate([
       { $group: { _id: "$user", totalQuantity: { $sum: "$quantity" } } }
@@ -57,7 +57,7 @@ router.get('/', async (req, res) => {
   } catch (err) {
     res.status(500).send({ message: err.message });
   }
-});*/
+});
 
 
 router.get('/orderQuantity/:qrCode', async (req, res) => {
