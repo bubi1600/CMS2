@@ -5,7 +5,7 @@ const { Order } = require('../models/order');
 router.get('/inventory', async (req, res) => {
   try {
     const totalQuantity = await Order.aggregate([
-      { $group: { _id: "$_id", totalQuantity: { $sum: "$quantity" } } }
+      { $group: { _id: "$user", totalQuantity: { $sum: "$quantity" } } }
     ]);
     res.json({ quantity: totalQuantity[0].totalQuantity });
   } catch (err) {
