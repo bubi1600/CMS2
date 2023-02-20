@@ -20,7 +20,7 @@ const { Product } = require('../models/product');
   }
 });*/
 
-router.get('/', async (req, res) => {
+router.get('/:userID', async (req, res) => {
   try {
     const totalQuantity = await Order.aggregate([
       { $group: { _id: "$user", totalQuantity: { $sum: "$quantity" } } }
