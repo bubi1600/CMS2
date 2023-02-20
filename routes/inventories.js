@@ -2,8 +2,38 @@ const express = require('express');
 const router = express.Router();
 const { Order } = require('../models/order');
 const { Product } = require('../models/product');
-
 router.get('/:userID', async (req, res) => {
+  try {
+    const userOrders = await Order.find({ user: req.params.userID }).populate({
+      path: 'orderItems',
+      populate: {
+        path: 'product'
+      }
+    });
+
+    const productQuantities = {};
+
+    userOrders.forEach(order => {
+      order.orderItems.forEach(item => {
+        const productId = item.product._id;
+        const quantity = item.quantity;
+        if (!productQuantities[productId]) {
+          productQuantities[productId] = quantity;
+        } else {
+          productQuantities[productId] += quantity;
+        }
+      })
+    });
+
+    res.status(200).json({ productQuantities });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: 'An error occurred while retrieving the total quantity.' });
+  }
+});
+
+
+/*router.get('/:userID', async (req, res) => {
   try {
     const userOrders = await Order.find({ user: req.params.userID }).populate({
       path: 'orderItems',
@@ -25,7 +55,7 @@ router.get('/:userID', async (req, res) => {
     console.log(err);
     res.status(500).json({ message: 'An error occurred while retrieving the total quantity.' });
   }
-});
+});*/
 
 
 /*router.get('/', async (req, res) => {
