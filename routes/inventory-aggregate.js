@@ -14,16 +14,16 @@ const { Order } = require('../models/order');
 });*/
 
 router.get(`/inventory/:orderID`, async (req, res) => {
-  const order = await Order.findById(req.params.id)
+  const inventory = await Order.findById(req.params.id)
     .populate('user', 'name')
     .populate({
       path: 'orderItems', populate: ('quantity')
     });
 
-  if (!order) {
+  if (!inventory) {
     res.status(500).json({ success: false })
   }
-  res.json({ order });
+  res.json({ inventory });
 })
 
 router.get('/orderQuantity/:qrCode', async (req, res) => {
