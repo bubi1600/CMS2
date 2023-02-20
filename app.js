@@ -23,7 +23,7 @@ const categoriesRoutes = require('./routes/categories');
 const productsRoutes = require('./routes/products');
 const usersRoutes = require('./routes/users');
 const ordersRoutes = require('./routes/orders');
-const inventoriesRoutes = require('./routes/inventory-aggregate');
+const inventoriesRoutes = require('./routes/inventories');
 
 const api = process.env.API_URL;
 const PORT = process.env.PORT || 3000
