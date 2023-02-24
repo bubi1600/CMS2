@@ -6,42 +6,33 @@ const { ProductQuantity } = require('../models/productQuantity');
 
 router.get('/:userID', async (req, res) => {
   try {
-    // Find all orders for the specified user and populate the orderItems with their respective products
-    const userOrders = await Order.find({ user: req.params.userID }).populate({
-      path: 'orderItems',
-      populate: {
-        path: 'product'
-      }
+    const orders = await Order.find({ user: req.params.userId }).populate('orderItems.product');
+    const products = {};
+
+    orders.forEach(order => {
+      order.orderItems.forEach(item => {
+        const productId = item.product._id.toString();
+        const productPrice = item.product.price;
+        const productQuantity = item.quantity;
+
+        if (products[productId]) {
+          products[productId].quantity += productQuantity;
+          products[productId].totalPrice += productPrice * productQuantity;
+        } else {
+          products[productId] = {
+            name: item.product.name,
+            quantity: productQuantity,
+            totalPrice: productPrice * productQuantity
+          };
+        }
+      });
     });
 
-    // Sum up the quantity of each product in the user's orders and save it in the ProductQuantity collection
-    const productQuantities = {};
-
-    for (const userOrder of userOrders) {
-      for (let i = 0; i < userOrder.orderItems.length; i++) {
-        const orderItem = userOrder.orderItems[i];
-        if (productQuantities[orderItem.product._id]) {
-          productQuantities[orderItem.product._id] += orderItem.quantity;
-        } else {
-          productQuantities[orderItem.product._id] = orderItem.quantity;
-        }
-      }
-    }
-
-    // Save the updated product quantities to the ProductQuantity collection
-    for (const [productId, quantity] of Object.entries(productQuantities)) {
-      const productQuantity = new ProductQuantity({
-        product: productId,
-        quantity: quantity
-      });
-      await productQuantity.save();
-    }
-
-    res.status(200).json({ productQuantities });
+    res.json({ products });
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: 'An error occurred while retrieving the total quantity.' });
+    res.status(500).json({ message: err.message });
   }
 });
+
 
 module.exports = router;
