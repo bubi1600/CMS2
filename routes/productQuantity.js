@@ -16,6 +16,7 @@ router.get('/:userID', async (req, res) => {
     // Loop through each order item and update the product quantity
     orderItems.forEach(orderItem => {
       const productId = orderItem.product._id;
+      const productName = orderItem.product.name;
       const orderItemQuantity = orderItem.quantity;
 
       if (productQuantityMap.has(productId)) {
@@ -27,7 +28,15 @@ router.get('/:userID', async (req, res) => {
     });
 
     // Convert the map to an array of objects and send the response
-    const productQuantities = Array.from(productQuantityMap, ([productId, quantity]) => ({ productId, quantity }));
+    const productQuantities = await Promise.all(Array.from(productQuantityMap.entries()).map(async ([productId, quantity]) => {
+      const product = await Product.findById(productId);
+      return {
+        productId,
+        name: product.name,
+        quantity
+      };
+    }));
+
     res.json(productQuantities);
   } catch (error) {
     console.error(error);
