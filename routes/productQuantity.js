@@ -6,27 +6,32 @@ const { ProductQuantity } = require('../models/productQuantity');
 
 router.get('/:userID', async (req, res) => {
   try {
-    const order = await Order.findById(req.params.orderID)
-      .populate('user', 'name')
-      .populate({
-        path: 'orderItems',
-        populate: {
-          path: 'product',
-          populate: 'category'
-        }
-      })
-      .lean(); // Add lean() to convert the Mongoose document to a plain JavaScript object
+    const userId = req.query.userId;
+    const orderItems = await OrderItem.find({ user: userId }).populate('product');
 
-    if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
-    }
+    // Create a map to store the total sum for each product
+    const productSumMap = new Map();
 
-    // Extract the products from the order items
-    const products = order.orderItems.map(item => item.product);
+    // Loop through each order item and update the product sum
+    orderItems.forEach(orderItem => {
+      const productId = orderItem.product._id;
+      const productPrice = orderItem.product.price;
+      const orderItemQuantity = orderItem.quantity;
 
-    res.json({ order, products });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+      if (productSumMap.has(productId)) {
+        const currentSum = productSumMap.get(productId);
+        productSumMap.set(productId, currentSum + (productPrice * orderItemQuantity));
+      } else {
+        productSumMap.set(productId, productPrice * orderItemQuantity);
+      }
+    });
+
+    // Convert the map to an array of objects and send the response
+    const productSums = Array.from(productSumMap, ([productId, sum]) => ({ productId, sum }));
+    res.json(productSums);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
   }
 });
 
