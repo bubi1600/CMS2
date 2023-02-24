@@ -10,26 +10,25 @@ router.get('/:userID', async (req, res) => {
     const userId = req.query.userId;
     const orderItems = await OrderItem.find({ user: userId }).populate('product');
 
-    // Create a map to store the total sum for each product
-    const productSumMap = new Map();
+    // Create a map to store the total quantity for each product
+    const productQuantityMap = new Map();
 
-    // Loop through each order item and update the product sum
+    // Loop through each order item and update the product quantity
     orderItems.forEach(orderItem => {
       const productId = orderItem.product._id;
-      const productPrice = orderItem.product.price;
       const orderItemQuantity = orderItem.quantity;
 
-      if (productSumMap.has(productId)) {
-        const currentSum = productSumMap.get(productId);
-        productSumMap.set(productId, currentSum + (productPrice * orderItemQuantity));
+      if (productQuantityMap.has(productId)) {
+        const currentQuantity = productQuantityMap.get(productId);
+        productQuantityMap.set(productId, currentQuantity + orderItemQuantity);
       } else {
-        productSumMap.set(productId, productPrice * orderItemQuantity);
+        productQuantityMap.set(productId, orderItemQuantity);
       }
     });
 
     // Convert the map to an array of objects and send the response
-    const productSums = Array.from(productSumMap, ([productId, sum]) => ({ productId, sum }));
-    res.json(productSums);
+    const productQuantities = Array.from(productQuantityMap, ([productId, quantity]) => ({ productId, quantity }));
+    res.json(productQuantities);
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');
