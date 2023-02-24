@@ -71,7 +71,7 @@ router.post('/create', async (req, res) => {
         console.error(err);
         res.status(500).json({ message: 'An error occurred while creating the order.' });
     }
-});
+})
 
 router.get(`/`, async (req, res) => {
     const orderList = await Order.find().populate('user', 'name').sort({ 'dateOrdered': -1 });
