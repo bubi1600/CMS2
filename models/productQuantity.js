@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
-const productQuantitySchema = mongoose.Schema({
+const productQuantitySchema = new mongoose.Schema({
     product: {
-        type: String,
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product'
     },
     quantity: {
         type: Number,
@@ -13,4 +13,4 @@ const productQuantitySchema = mongoose.Schema({
 
 const ProductQuantity = mongoose.model('ProductQuantity', productQuantitySchema);
 
-module.exports = ProductQuantity;
+module.exports = { ProductQuantity };
