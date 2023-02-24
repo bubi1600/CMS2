@@ -9,20 +9,19 @@ router.post('/create', async (req, res) => {
         let newOrderItem = new OrderItem({
             quantity: orderItem.quantity,
             product: orderItem.product
-        });
+        })
 
         newOrderItem = await newOrderItem.save();
 
         return newOrderItem._id;
-    }));
-
-    const orderItemsIdsResolved = (await orderItemsIds).map((id) => mongoose.Types.ObjectId(id));
+    }))
+    const orderItemsIdsResolved = await orderItemsIds;
 
     const orderTotalPrices = await Promise.all(orderItemsIdsResolved.map(async (orderItemId) => {
         const orderItem = await OrderItem.findById(orderItemId).populate('product', 'price');
         const totalPrice = orderItem.product.price * orderItem.quantity;
-        return totalPrice;
-    }));
+        return totalPrice
+    }))
 
     const orderTotalPrice = orderTotalPrices.reduce((a, b) => a + b, 0);
 
@@ -38,17 +37,15 @@ router.post('/create', async (req, res) => {
         //status: req.body.status,
         totalPrice: orderTotalPrice,
         user: req.body.user,
-    });
-
+    })
     order = await order.save();
 
-    if (!order) {
-        return res.status(400).send('the order cannot be created!');
-    }
+    if (!order)
+        return res.status(400).send('the order cannot be created!')
 
     res.json({ order });
-});
 
+})
 
 router.get(`/`, async (req, res) => {
     const orderList = await Order.find().populate('user', 'name').sort({ 'dateOrdered': -1 });
