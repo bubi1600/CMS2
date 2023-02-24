@@ -44,8 +44,6 @@ router.post('/create', async (req, res) => {
     if (!order)
         return res.status(400).send('the order cannot be created!')
 
-    res.json({ order });
-
     // Sum up the quantity of each product for new and existing orders and save it in the ProductQuantity collection
     const productQuantities = {};
 
@@ -82,6 +80,7 @@ router.post('/create', async (req, res) => {
         });
         await productQuantity.save();
     }
+    res.json({ order });
 })
 
 router.get(`/`, async (req, res) => {
