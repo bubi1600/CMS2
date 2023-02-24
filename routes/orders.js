@@ -51,7 +51,7 @@ router.post('/create', async (req, res) => {
         // Update the product quantity in the ProductQuantity collection
         for (const orderItem of orderItems) {
             const { product, quantity } = orderItem;
-            const productQuantity = await ProductQuantity.findOne({ product: product._id });
+            const productQuantity = await ProductQuantity.findOne({ product: product._id, user: req.body.user });
 
             if (productQuantity) {
                 productQuantity.quantity += quantity;
@@ -60,6 +60,7 @@ router.post('/create', async (req, res) => {
                 const newProductQuantity = new ProductQuantity({
                     product: product._id,
                     quantity,
+                    user: req.body.user,
                 });
                 await newProductQuantity.save();
             }
@@ -70,7 +71,7 @@ router.post('/create', async (req, res) => {
         console.error(err);
         res.status(500).json({ message: 'An error occurred while creating the order.' });
     }
-})
+});
 
 router.get(`/`, async (req, res) => {
     const orderList = await Order.find().populate('user', 'name').sort({ 'dateOrdered': -1 });
