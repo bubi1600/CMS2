@@ -44,42 +44,7 @@ router.post('/create', async (req, res) => {
     if (!order)
         return res.status(400).send('the order cannot be created!')
 
-    // Sum up the quantity of each product for new and existing orders and save it in the ProductQuantity collection
-    const productQuantities = {};
 
-    // Get all existing orders from the database
-    const existingOrders = await Order.find();
-
-    // Loop through each order and sum up the quantity of each product
-    for (const existingOrder of existingOrders) {
-        for (let i = 0; i < existingOrder.orderItems.length; i++) {
-            const orderItem = existingOrder.orderItems[i];
-            if (productQuantities[orderItem.product]) {
-                productQuantities[orderItem.product] += orderItem.quantity;
-            } else {
-                productQuantities[orderItem.product] = orderItem.quantity;
-            }
-        }
-    }
-
-    // Loop through each order item in the new order and sum up the quantity of each product
-    for (let i = 0; i < req.body.orderItems.length; i++) {
-        const orderItem = req.body.orderItems[i];
-        if (productQuantities[orderItem.product]) {
-            productQuantities[orderItem.product] += orderItem.quantity;
-        } else {
-            productQuantities[orderItem.product] = orderItem.quantity;
-        }
-    }
-
-    // Save the updated product quantities to the ProductQuantity collection
-    for (const [product, quantity] of Object.entries(productQuantities)) {
-        const productQuantity = new ProductQuantity({
-            product: product,
-            quantity: quantity
-        });
-        await productQuantity.save();
-    }
     res.json({ order });
 })
 
