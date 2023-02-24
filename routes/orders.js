@@ -1,51 +1,53 @@
 const { Order } = require('../models/order');
 const express = require('express');
 const { OrderItem } = require('../models/order-item');
-const { productQuantity } = require('../models/productQuantity');
 const router = express.Router();
 const mongoose = require('mongoose');
 
 router.post('/create', async (req, res) => {
-    const orderItemsIds = Promise.all(req.body.orderItems.map(async (orderItem) => {
-        let newOrderItem = new OrderItem({
-            quantity: orderItem.quantity,
-            product: orderItem.product
+    try {
+        const orderItemsIds = await Promise.all(req.body.orderItems.map(async (orderItem) => {
+            let newOrderItem = new OrderItem({
+                quantity: orderItem.quantity,
+                product: orderItem.product
+            })
+
+            newOrderItem = await newOrderItem.save();
+
+            return newOrderItem._id;
+        }));
+
+        const orderTotalPrices = await Promise.all(orderItemsIds.map(async (orderItemId) => {
+            const orderItem = await OrderItem.findById(orderItemId).populate('product', 'price');
+            const totalPrice = orderItem.product.price * orderItem.quantity;
+            return totalPrice
+        }))
+
+        const orderTotalPrice = orderTotalPrices.reduce((a, b) => a + b, 0);
+
+        let order = new Order({
+            _id: new mongoose.Types.ObjectId(),
+            shippingAddress1: req.body.shippingAddress1,
+            shippingAddress2: req.body.shippingAddress2,
+            city: req.body.city,
+            zip: req.body.zip,
+            country: req.body.country,
+            phone: req.body.phone,
+            orderItems: orderItemsIds,
+            //status: req.body.status,
+            totalPrice: orderTotalPrice,
+            user: req.body.user,
         })
+        order = await order.save();
 
-        newOrderItem = await newOrderItem.save();
+        if (!order)
+            return res.status(400).send('the order cannot be created!')
 
-        return newOrderItem._id;
-    }))
-    const orderItemsIdsResolved = await orderItemsIds;
-
-    const orderTotalPrices = await Promise.all(orderItemsIdsResolved.map(async (orderItemId) => {
-        const orderItem = await OrderItem.findById(orderItemId).populate('product', 'price');
-        const totalPrice = orderItem.product.price * orderItem.quantity;
-        return totalPrice
-    }))
-
-    const orderTotalPrice = orderTotalPrices.reduce((a, b) => a + b, 0);
-
-    let order = new Order({
-        _id: new mongoose.Types.ObjectId(),
-        shippingAddress1: req.body.shippingAddress1,
-        shippingAddress2: req.body.shippingAddress2,
-        city: req.body.city,
-        zip: req.body.zip,
-        country: req.body.country,
-        phone: req.body.phone,
-        orderItems: orderItemsIdsResolved,
-        //status: req.body.status,
-        totalPrice: orderTotalPrice,
-        user: req.body.user,
-    })
-    order = await order.save();
-
-    if (!order)
-        return res.status(400).send('the order cannot be created!')
-
-
-    res.json({ order });
+        res.json({ order });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'An error occurred while creating the order.' });
+    }
 })
 
 router.get(`/`, async (req, res) => {
