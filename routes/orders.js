@@ -39,10 +39,6 @@ router.post('/create', async (req, res) => {
         totalPrice: orderTotalPrice,
         user: req.body.user,
     })
-    order = await order.save();
-
-    if (!order)
-        return res.status(400).send('the order cannot be created!')
 
     for (let i = 0; i < req.body.orderItems.length; i++) {
         const orderItem = req.body.orderItems[i];
@@ -64,6 +60,11 @@ router.post('/create', async (req, res) => {
         }
     }
     await ProductQuantity.updateMany({}, { $currentDate: { updatedAt: true } });
+
+    order = await order.save();
+
+    if (!order)
+        return res.status(400).send('the order cannot be created!')
 
     res.json({ order });
 
