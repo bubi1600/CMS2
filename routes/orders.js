@@ -50,15 +50,17 @@ router.post('/create', async (req, res) => {
             { user: req.body.user, product: productId },
             { $inc: { quantity: quantity } },
             { upsert: true, new: true }
-        );
+        ).populate('product');
 
-        // If the product quantity was just created, set the user and product IDs
+        // If the product quantity was just created, set the user, product IDs and name
         if (!productQuantity.user || !productQuantity.product) {
             productQuantity.user = req.body.user;
             productQuantity.product = productId;
+            productQuantity.name = orderItem.name;
             await productQuantity.save();
         }
     }
+
     await ProductQuantity.updateMany({}, { $currentDate: { updatedAt: true } });
 
     order = await order.save();
