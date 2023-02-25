@@ -5,7 +5,54 @@ const { Product } = require('../models/product');
 const { ProductQuantity } = require('../models/productQuantity');
 const { OrderItem } = require('../models/order-item');
 
-router.get('/:userID', async (req, res) => {
+router.get('/:userId', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    // Group the order items by product ID and sum the quantity for each group
+    const productQuantities = await OrderItem.aggregate([
+      {
+        $match: { user: userId }
+      },
+      {
+        $group: {
+          _id: '$product',
+          quantity: { $sum: '$quantity' }
+        }
+      },
+      {
+        $lookup: {
+          from: 'products',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'product'
+        }
+      },
+      {
+        $unwind: '$product'
+      },
+      {
+        $project: {
+          _id: 0,
+          productId: '$_id',
+          name: '$product.name',
+          quantity: 1,
+          totalPrice: { $multiply: ['$quantity', '$product.price'] }
+        }
+      }
+    ]);
+
+    // Save the product quantities to the database
+    const savedProductQuantities = await ProductQuantity.insertMany(productQuantities);
+
+    res.json(savedProductQuantities);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+})
+
+/*router.get('/:userID', async (req, res) => {
   try {
     const userId = req.query.userId;
     const orderItems = await OrderItem.find({ user: userId }).populate('product');
@@ -42,7 +89,7 @@ router.get('/:userID', async (req, res) => {
     console.error(error);
     res.status(500).send('Internal Server Error');
   }
-});
+});*/
 
 
 module.exports = router;
