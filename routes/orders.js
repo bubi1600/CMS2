@@ -3,6 +3,7 @@ const express = require('express');
 const { OrderItem } = require('../models/order-item');
 const router = express.Router();
 const mongoose = require('mongoose');
+const { ProductQuantity } = require('../models/productQuantity');
 
 router.post('/create', async (req, res) => {
     const orderItemsIds = Promise.all(req.body.orderItems.map(async (orderItem) => {
@@ -42,6 +43,27 @@ router.post('/create', async (req, res) => {
 
     if (!order)
         return res.status(400).send('the order cannot be created!')
+
+    for (let i = 0; i < req.body.orderItems.length; i++) {
+        const orderItem = req.body.orderItems[i];
+        const productId = orderItem.product;
+        const quantity = orderItem.quantity;
+
+        // Find or create the product quantity for the given product and user
+        const productQuantity = await ProductQuantity.findOneAndUpdate(
+            { user: req.body.user, product: productId },
+            { $inc: { quantity: quantity } },
+            { upsert: true, new: true }
+        );
+
+        // If the product quantity was just created, set the user and product IDs
+        if (!productQuantity.user || !productQuantity.product) {
+            productQuantity.user = req.body.user;
+            productQuantity.product = productId;
+            await productQuantity.save();
+        }
+    }
+    await ProductQuantity.updateMany({}, { $currentDate: { updatedAt: true } });
 
     res.json({ order });
 
