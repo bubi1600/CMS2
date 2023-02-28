@@ -12,7 +12,7 @@ router.get('/:userId', async (req, res) => {
     return res.status(500).send('The product quantities could not be retrieved.');
   }
 
-  res.json(productQuantities);
+  res.json({ count: productQuantities.length, productQuantities });
 });
 
 /*router.get('/:userId', async (req, res) => {
