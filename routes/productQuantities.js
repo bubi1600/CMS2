@@ -6,7 +6,12 @@ const { ProductQuantity } = require('../models/productQuantity');
 //const { OrderItem } = require('../models/order-item');
 
 router.get('/:userId', async (req, res) => {
-  const productQuantities = await ProductQuantity.find({ user: req.params.userId }).populate('product', 'name');
+  const _id = req.params.userID;
+  if (!mongoose.isValidObjectId(_id)) {
+    return res.status(400).send("Invalid productQuantity Id");
+  }
+
+  const productQuantities = await ProductQuantity.find({ user: _id }).populate('product', 'name');
 
   if (!productQuantities) {
     return res.status(500).send('The product quantities could not be retrieved.');
