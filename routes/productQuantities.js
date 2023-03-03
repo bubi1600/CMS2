@@ -12,14 +12,40 @@ router.get('/:userId', async (req, res) => {
     return res.status(400).send("Invalid productQuantity Id");
   }*/
 
-  const productQuantities = await ProductQuantity.find({ user: req.params.userId }).populate('product', 'name');
+  const productQuantities = await ProductQuantity.find({ user: req.params.userId }).populate('product', 'name', 'description', 'category');
 
   if (!productQuantities) {
     return res.status(500).send('The product quantities could not be retrieved.');
   }
 
   res.json({ count: productQuantities.length, productQuantities });
+})
+
+router.delete('/:userId/:productId', async (req, res) => {
+  const { userId, productId } = req.params;
+
+  // Check if the user and product IDs are valid ObjectIds
+  if (!mongoose.isValidObjectId(userId) || !mongoose.isValidObjectId(productId)) {
+    return res.status(400).send('Invalid user or product ID.');
+  }
+
+  // Find the user's product quantity for the specified product
+  const productQuantity = await ProductQuantity.findOne({ user: userId, product: productId });
+
+  // If the product quantity doesn't exist, return an error
+  if (!productQuantity) {
+    return res.status(404).send('Product quantity not found for user and product.');
+  }
+
+  // Decrement the quantity by 1 if it's not already 0
+  if (productQuantity.quantity > 0) {
+    productQuantity.quantity--;
+    await productQuantity.save();
+  }
+
+  res.send('Product quantity updated successfully.');
 });
+
 
 /*router.get('/:userId', async (req, res) => {
   try {
