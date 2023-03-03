@@ -12,7 +12,7 @@ router.get('/:userId', async (req, res) => {
     return res.status(400).send("Invalid productQuantity Id");
   }*/
 
-  const productQuantities = await ProductQuantity.find({ user: req.params.userId }).populate('product', 'name', 'description', 'category');
+  const productQuantities = await ProductQuantity.find({ user: req.params.userId }).populate('product', 'name', { path: 'product', populate: 'description', 'category'});
 
   if (!productQuantities) {
     return res.status(500).send('The product quantities could not be retrieved.');
