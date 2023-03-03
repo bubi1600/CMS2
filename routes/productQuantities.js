@@ -11,8 +11,12 @@ router.get('/:userId', async (req, res) => {
     .find({ user: req.params.userId })
     .populate({
       path: 'product',
-      select: 'name description category'
-    });
+      select: 'name description category',
+      populate: {
+        path: 'category',
+        select: 'name'
+      }
+    })
 
   if (!productQuantities) {
     return res.status(500).send('The product quantities could not be retrieved.');
