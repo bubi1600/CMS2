@@ -40,13 +40,13 @@ if (!productQuantities) {
 res.json({ count: productQuantities.length, productQuantities });
 })*/
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:userId/:productId', async (req, res) => {
   const { userId, productId } = req.params;
 
   // Check if the user and product IDs are valid ObjectIds
-  //if (!mongoose.isValidObjectId(userId) || !mongoose.isValidObjectId(productId)) {
-  // return res.status(400).send('Invalid user or product ID.');
-  //}
+  if (!mongoose.isValidObjectId(userId) || !mongoose.isValidObjectId(productId)) {
+    return res.status(400).send('Invalid user or product ID.');
+  }
 
   // Find the user's product quantity for the specified product
   const productQuantity = await ProductQuantity.findOne({ user: userId, product: productId });
