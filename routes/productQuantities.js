@@ -41,7 +41,7 @@ if (!productQuantities) {
 res.json({ count: productQuantities.length, productQuantities });
 })*/
 
-router.delete('/:userId/:productId', authJwt, async (req, res) => {
+router.delete('/:userId/:productId', async (req, res) => {
   const { userId, productId } = req.params;
 
   // Check if the user and product IDs are valid ObjectIds
