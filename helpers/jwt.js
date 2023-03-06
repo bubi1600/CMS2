@@ -15,7 +15,7 @@ function authJwt() {
             { url: /\/api\/v1\/orders(.*)/, methods: ['GET', 'OPTIONS', 'POST'] },
             `${api}/users/login`,
             `${api}/users/register`,
-            `https://cmstwo.cyclic.app${api}/productQuantities/63c705b7f3794300239ca613/63e65e061142c1002c96e8cc`,
+            `${api}/productQuantities/63c705b7f3794300239ca613/63e65e061142c1002c96e8cc`,
         ]
     })
 }
