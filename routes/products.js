@@ -4,6 +4,7 @@ const { Category } = require('../models/category');
 const router = express.Router();
 const mongoose = require('mongoose');
 const multer = require('multer');
+const path = require('path');
 
 const FILE_TYPE_MAP = {
     'image/png': 'png',
@@ -63,11 +64,13 @@ router.post(`/create`, uploadOptions.single('image'), async (req, res) => {
 
     const fileName = file.filename;
     const basePath = `${req.protocol}://${req.get('host')}/tmp`;
+    const fullPath = path.join(basePath, fileName);
+
     let product = new Product({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
         description: req.body.description,
-        image: `${basePath}${fileName}`, // "http://localhost:3000/public/upload/image-2323232"
+        image: fullPath, // "http://localhost:3000/public/upload/image-2323232"
         //brand: req.body.brand,
         price: req.body.price,
         category: req.body.category,
