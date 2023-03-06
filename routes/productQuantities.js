@@ -5,6 +5,7 @@ const { Product } = require('../models/product');
 const { ProductQuantity } = require('../models/productQuantity');
 //const { OrderItem } = require('../models/order-item');
 const mongoose = require('mongoose');
+const authJwt = require('../helpers/jwt');
 
 router.get('/:userId', async (req, res) => {
   const productQuantities = await ProductQuantity
@@ -40,7 +41,7 @@ if (!productQuantities) {
 res.json({ count: productQuantities.length, productQuantities });
 })*/
 
-router.delete('/:userId/:productId', async (req, res) => {
+router.delete('/:userId/:productId', authJwt, async (req, res) => {
   const { userId, productId } = req.params;
 
   // Check if the user and product IDs are valid ObjectIds
