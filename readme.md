@@ -1,9 +1,9 @@
-# E-Commerce Node.js Backend API
+# Coupon management system Node.js Backend API
 
 [TOC]
 
 ## Introduction
-This repository is the code representation for the udemy course "MERN Stack E-Commerce Mobile App: React Native, Redux, Expo"
+This repository is the code representation for my exam work, which is to program a functioning coupon management system app for android units.
 
 ## Run
 
@@ -25,7 +25,9 @@ npm install
 ### Start API
 
 ```
-npm start
+npm start,
+or
+Setup a cyclic api, which skips the part where you keep typing npm start
 ```
 
 ## Routes
