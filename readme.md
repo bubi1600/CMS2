@@ -80,3 +80,24 @@ To login the user and get the auth token you can use:
 ```
 POST     /api/v1/users/login
 ```
+// Create a new ProductQuantity document for every user
+    const users = await User.find({});
+    for (const user of users) {
+        const existingProductQuantity = await ProductQuantity.findOne({ product: product._id, user: user._id });
+        if (!existingProductQuantity) {
+            const productQuantity = new ProductQuantity({
+                product: product._id,
+                quantity: 0,
+                user: user._id,
+            });
+            await productQuantity.save();
+        } else {
+            const newQuantity = existingProductQuantity.quantity + req.body.quantity;
+            if (newQuantity > 10) {
+                existingProductQuantity.quantity = 10;
+            } else {
+                existingProductQuantity.quantity = newQuantity;
+            }
+            await existingProductQuantity.save();
+        }
+    }
