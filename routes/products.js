@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const path = require('path');
 
-/*const FILE_TYPE_MAP = {
+const FILE_TYPE_MAP = {
     'image/png': 'png',
     'image/jpeg': 'jpeg',
     'image/jpg': 'jpg',
@@ -29,7 +29,7 @@ const storage = multer.diskStorage({
     },
 });
 
-const uploadOptions = multer({ storage: storage });*/
+const uploadOptions = multer({ storage: storage });
 
 router.get(`/`, async (req, res) => {
     let filter = {};
