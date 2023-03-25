@@ -87,10 +87,33 @@ router.post(`/create`, /*uploadOptions.single('image'),*/ async (req, res) => {
             category: req.body.category,
         });
 
-
         product = await product.save();
         if (!product) return res.status(500).send('The product cannot be created');
+
+        // Create a new ProductQuantity document for every user
+        const users = await User.find({});
+        for (const user of users) {
+            const existingProductQuantity = await ProductQuantity.findOne({ product: product._id, user: user._id });
+            if (!existingProductQuantity) {
+                const productQuantity = new ProductQuantity({
+                    product: product._id,
+                    quantity: 0,
+                    user: user._id,
+                });
+                await productQuantity.save();
+            } else {
+                const newQuantity = existingProductQuantity.quantity + req.body.quantity;
+                if (newQuantity > 10) {
+                    existingProductQuantity.quantity = 10;
+                } else {
+                    existingProductQuantity.quantity = newQuantity;
+                }
+                await existingProductQuantity.save();
+            }
+        }
+
         res.json({ product });
+
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
