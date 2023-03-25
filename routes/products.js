@@ -46,7 +46,9 @@ router.get(`/`, async (req, res) => {
 });
 
 router.get(`/read/:productID`, async (req, res) => {
-    const product = await Product.findById(req.params.id).populate('category');
+    //const product = await Product.findById(req.params.id).populate('category');
+    const product = await Product.findById(req.params.productID).populate('category');
+
 
     if (!product) {
         res.status(500).json({ success: false });
@@ -57,7 +59,9 @@ router.get(`/read/:productID`, async (req, res) => {
 router.post(`/create`, /*uploadOptions.single('image'),*/ async (req, res) => {
 
     const category = await Category.findById(req.body.category);
-    if (!category) return res.status(400).send('Invalid Category');
+    if (!mongoose.Types.ObjectId.isValid(req.body.category)) {
+        return res.status(400).send('Invalid Category ID');
+    };
 
     /*const file = req.file;
     if (!file) return res.status(400).send('No image in the request');
@@ -76,11 +80,14 @@ router.post(`/create`, /*uploadOptions.single('image'),*/ async (req, res) => {
         category: req.body.category,
     });
 
-    product = await product.save();
-
-    if (!product) return res.status(500).send('The product cannot be created');
-
-    res.json({ product });
+    try {
+        product = await product.save();
+        if (!product) return res.status(500).send('The product cannot be created');
+        res.json({ product });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
 });
 
 router.put('/find/:id', /*uploadOptions.single('image'),*/ async (req, res) => {
