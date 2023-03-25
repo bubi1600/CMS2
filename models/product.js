@@ -34,11 +34,6 @@ const productSchema = mongoose.Schema({
         default: Date.now,
     },
     id: { type: String, unique: true },
-    /*id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product',
-        unique: true,
-    }*/
 })
 
 /*productSchema.method('toJSON', function () {
