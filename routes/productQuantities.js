@@ -9,12 +9,19 @@ const mongoose = require('mongoose');
 
 router.get('/:userId', async (req, res) => {
   try {
-    const productQuantities = await ProductQuantity.find({ user: req.params.userId })
-      .populate('product', 'name') // populate the product field with only the name
-      .select('quantity product'); // select only the quantity and product fields
-    res.json(productQuantities);
-  } catch (error) {
-    console.error(error);
+    const productQuantities = await ProductQuantity
+      .find({ user: req.params.userId })
+      .populate('product', 'name description quantity category')
+      .populate('user', 'name');
+
+    if (!productQuantities) {
+      return res.status(500).send('The product quantities could not be retrieved.');
+    }
+
+    res.json({ count: productQuantities.length, productQuantities });
+
+  } catch (err) {
+    console.error(err);
     res.status(500).send('Server error');
   }
 });
