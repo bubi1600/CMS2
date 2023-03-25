@@ -7,6 +7,21 @@ const { ProductQuantity } = require('../models/productQuantity');
 const mongoose = require('mongoose');
 
 router.get('/:userId', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    const productQuantities = await ProductQuantity.find({ user: user._id }).populate('product');
+    res.json({ productQuantities });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
+});
+
+/*router.get('/:userId', async (req, res) => {
   const productQuantities = await ProductQuantity
     .find({ user: req.params.userId })
     .populate({
@@ -25,7 +40,7 @@ router.get('/:userId', async (req, res) => {
   res.json({ count: productQuantities.length, productQuantities });
 })
 
-/*router.get('/:userId', async (req, res) => {
+router.get('/:userId', async (req, res) => {
   /*const _id = req.params.userID;
   if (!mongoose.isValidObjectId(_id)) {
     return res.status(400).send("Invalid productQuantity Id");
