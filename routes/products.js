@@ -92,23 +92,27 @@ router.post(`/create`, /*uploadOptions.single('image'),*/ async (req, res) => {
         product = await product.save();
         if (!product) return res.status(500).send('The product cannot be created');
 
-        // Create a new ProductQuantity document for every user
+        // Find all users
         const users = await User.find({});
+
+        // Loop through each user to create or update their ProductQuantity record
         for (const user of users) {
-            const existingProductQuantity = await ProductQuantity.findOne({ product: product._id, user: user._id });
+            const existingProductQuantity = await ProductQuantity.findOne({
+                product: product._id,
+                user: user._id
+            });
+
             if (!existingProductQuantity) {
                 const productQuantity = new ProductQuantity({
                     product: product._id,
-                    quantity: 0,
+                    quantity: req.body.quantity,
                     user: user._id,
                 });
                 await productQuantity.save();
             } else {
-                const newQuantity = existingProductQuantity.quantity + req.body.quantity;
-                if (newQuantity > 10) {
+                existingProductQuantity.quantity += req.body.quantity;
+                if (existingProductQuantity.quantity > 10) {
                     existingProductQuantity.quantity = 10;
-                } else {
-                    existingProductQuantity.quantity = newQuantity;
                 }
                 await existingProductQuantity.save();
             }
