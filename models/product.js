@@ -34,13 +34,18 @@ const productSchema = mongoose.Schema({
         default: Date.now,
     },
     id: { type: String, unique: true },
+    /*id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product',
+        unique: true,
+    }*/
 })
 
-/*productSchema.method('toJSON', function () {
+productSchema.method('toJSON', function () {
     const { __v, ...object } = this.toObject();
     const { _id: id, ...result } = object;
     return { ...result, id };
-});*/
+});
 
 
 exports.Product = mongoose.model('Product', productSchema);
