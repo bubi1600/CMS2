@@ -1,6 +1,7 @@
 const { Product } = require('../models/product');
 const express = require('express');
 const { User } = require('../models/user');
+const { ProductQuantity } = require('../models/productQuantity');
 const { Category } = require('../models/category');
 const router = express.Router();
 const mongoose = require('mongoose');
