@@ -58,28 +58,33 @@ router.get(`/read/:productID`, async (req, res) => {
 
 router.post(`/create`, /*uploadOptions.single('image'),*/ async (req, res) => {
 
-    const category = await Category.findById(req.body.category);
-    if (!mongoose.Types.ObjectId.isValid(req.body.category)) {
-        return res.status(400).send('Invalid Category ID');
-    };
+    try {
+        const category = await Category.findById(req.body.category);
+        console.log(category);
+        if (!mongoose.Types.ObjectId.isValid(req.body.category)) {
+            return res.status(400).send('Invalid Category ID');
+        };
 
-    /*const file = req.file;
-    if (!file) return res.status(400).send('No image in the request');
+        /*const file = req.file;
+        if (!file) return res.status(400).send('No image in the request');
+    
+        const fileName = file.filename;
+        const basePath = `${req.protocol}://${req.get('host')}/tmp`;
+        const fullPath = path.join(basePath, fileName);*/
 
-    const fileName = file.filename;
-    const basePath = `${req.protocol}://${req.get('host')}/tmp`;
-    const fullPath = path.join(basePath, fileName);*/
-
-    let product = new Product({
-        _id: new mongoose.Types.ObjectId(),
-        name: req.body.name,
-        description: req.body.description,
-        //image: fullPath, // "http://localhost:3000/public/upload/image-2323232"
-        //brand: req.body.brand,
-        quantity: req.body.quantity,
-        category: req.body.category,
-    });
-
+        let product = new Product({
+            _id: new mongoose.Types.ObjectId(),
+            name: req.body.name,
+            description: req.body.description,
+            //image: fullPath, // "http://localhost:3000/public/upload/image-2323232"
+            //brand: req.body.brand,
+            quantity: req.body.quantity,
+            category: req.body.category,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send('Error retrieving category');
+    }
     try {
         product = await product.save();
         if (!product) return res.status(500).send('The product cannot be created');
