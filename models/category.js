@@ -13,12 +13,12 @@ const categorySchema = mongoose.Schema({
     },
     image: {
         type: String,
-    },
+    },*/
     id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
         unique: true,
-    }*/
+    }
 })
 
 
