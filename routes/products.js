@@ -3,10 +3,10 @@ const express = require('express');
 const { Category } = require('../models/category');
 const router = express.Router();
 const mongoose = require('mongoose');
-const multer = require('multer');
+//const multer = require('multer');
 const path = require('path');
 
-const FILE_TYPE_MAP = {
+/*const FILE_TYPE_MAP = {
     'image/png': 'png',
     'image/jpeg': 'jpeg',
     'image/jpg': 'jpg',
@@ -29,7 +29,7 @@ const storage = multer.diskStorage({
     },
 });
 
-const uploadOptions = multer({ storage: storage });
+const uploadOptions = multer({ storage: storage });*/
 
 router.get(`/`, async (req, res) => {
     let filter = {};
@@ -54,25 +54,25 @@ router.get(`/read/:productID`, async (req, res) => {
     res.json({ product });
 });
 
-router.post(`/create`, uploadOptions.single('image'), async (req, res) => {
+router.post(`/create`, /*uploadOptions.single('image'),*/ async (req, res) => {
 
     const category = await Category.findById(req.body.category);
     if (!category) return res.status(400).send('Invalid Category');
 
-    const file = req.file;
+    /*const file = req.file;
     if (!file) return res.status(400).send('No image in the request');
 
     const fileName = file.filename;
     const basePath = `${req.protocol}://${req.get('host')}/tmp`;
-    const fullPath = path.join(basePath, fileName);
+    const fullPath = path.join(basePath, fileName);*/
 
     let product = new Product({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
         description: req.body.description,
-        image: fullPath, // "http://localhost:3000/public/upload/image-2323232"
+        //image: fullPath, // "http://localhost:3000/public/upload/image-2323232"
         //brand: req.body.brand,
-        price: req.body.price,
+        quantity: req.body.quantity,
         category: req.body.category,
     });
 
@@ -83,7 +83,7 @@ router.post(`/create`, uploadOptions.single('image'), async (req, res) => {
     res.json({ product });
 });
 
-router.put('/find/:id', uploadOptions.single('image'), async (req, res) => {
+router.put('/find/:id', /*uploadOptions.single('image'),*/ async (req, res) => {
     if (!mongoose.isValidObjectId(req.params.id)) {
         return res.status(400).send('Invalid Product Id');
     }
@@ -93,7 +93,7 @@ router.put('/find/:id', uploadOptions.single('image'), async (req, res) => {
     const product = await Product.findById(req.params.id);
     if (!product) return res.status(400).send('Invalid Product!');
 
-    const file = req.file;
+    /*const file = req.file;
     let imagepath;
 
     if (file) {
@@ -102,7 +102,7 @@ router.put('/find/:id', uploadOptions.single('image'), async (req, res) => {
         imagepath = `${basePath}${fileName}`;
     } else {
         imagepath = product.image;
-    }
+    }*/
 
     const updatedProduct = await Product.findByIdAndUpdate(
         req.params.id,
@@ -170,7 +170,7 @@ router.get(`/get/featured/:count`, async (req, res) => {
     res.send(products);
 });
 
-router.put(
+/*router.put(
     '/gallery-images/:id',
     uploadOptions.array('images', 10),
     async (req, res) => {
@@ -200,7 +200,7 @@ router.put(
 
         res.send(product);
     }
-);
+);*/
 
 module.exports = router;
 
