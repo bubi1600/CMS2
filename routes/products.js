@@ -65,13 +65,18 @@ router.post(`/create`, /*uploadOptions.single('image'),*/ async (req, res) => {
             return res.status(400).send('Invalid Category ID');
         };
 
-        /*const file = req.file;
-        if (!file) return res.status(400).send('No image in the request');
-    
-        const fileName = file.filename;
-        const basePath = `${req.protocol}://${req.get('host')}/tmp`;
-        const fullPath = path.join(basePath, fileName);*/
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send('Error retrieving category');
+    }
 
+    /*const file = req.file;
+    if (!file) return res.status(400).send('No image in the request');
+ 
+    const fileName = file.filename;
+    const basePath = `${req.protocol}://${req.get('host')}/tmp`;
+    const fullPath = path.join(basePath, fileName);*/
+    try {
         let product = new Product({
             _id: new mongoose.Types.ObjectId(),
             name: req.body.name,
@@ -81,11 +86,8 @@ router.post(`/create`, /*uploadOptions.single('image'),*/ async (req, res) => {
             quantity: req.body.quantity,
             category: req.body.category,
         });
-    } catch (error) {
-        console.log(error);
-        return res.status(500).send('Error retrieving category');
-    }
-    try {
+
+
         product = await product.save();
         if (!product) return res.status(500).send('The product cannot be created');
         res.json({ product });
