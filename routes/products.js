@@ -87,6 +87,7 @@ router.post(`/create`, /*uploadOptions.single('image'),*/ async (req, res) => {
             //brand: req.body.brand,
             quantity: req.body.quantity,
             category: req.body.category,
+            expiryDate: req.body.expiryDate
         });
 
         product = await product.save();

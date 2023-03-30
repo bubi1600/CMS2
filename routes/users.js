@@ -23,25 +23,43 @@ router.get('/:id', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-    let user = new User({
-        name: req.body.name,
-        email: req.body.email,
-        passwordHash: bcrypt.hashSync(req.body.password, 10),
-        phone: req.body.phone,
-        isAdmin: req.body.isAdmin,
-        street: req.body.street,
-        apartment: req.body.apartment,
-        zip: req.body.zip,
-        city: req.body.city,
-        country: req.body.country,
-    })
-    user = await user.save();
+    try {
+        let user = new User({
+            name: req.body.name,
+            email: req.body.email,
+            passwordHash: bcrypt.hashSync(req.body.password, 10),
+            phone: req.body.phone,
+            isAdmin: req.body.isAdmin,
+            street: req.body.street,
+            apartment: req.body.apartment,
+            zip: req.body.zip,
+            city: req.body.city,
+            country: req.body.country,
+        });
+        user = await user.save();
 
-    if (!user)
-        return res.status(400).send('the user cannot be created!')
+        if (!user) {
+            return res.status(400).send('The user could not be created');
+        }
 
-    res.send(user);
-})
+        const product = await Product.findById(req.body.productId);
+        if (!product) {
+            return res.status(400).send('Invalid product ID');
+        }
+
+        const productQuantity = new ProductQuantity({
+            product: product._id,
+            quantity: 0,
+            user: user._id,
+        });
+        await productQuantity.save();
+
+        res.send(user);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error');
+    }
+});
 
 router.put('/:id', async (req, res) => {
 

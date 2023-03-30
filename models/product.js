@@ -33,6 +33,10 @@ const productSchema = mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    expiryDate: {
+        type: Date,
+        required: true
+    },
     id: { type: String, unique: true },
     /*id: {
         type: mongoose.Schema.Types.ObjectId,
@@ -40,6 +44,7 @@ const productSchema = mongoose.Schema({
         unique: true,
     }*/
 })
+
 
 /*productSchema.method('toJSON', function () {
     const { __v, ...object } = this.toObject();
