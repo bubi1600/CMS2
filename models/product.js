@@ -35,7 +35,13 @@ const productSchema = mongoose.Schema({
     },
     expiryDate: {
         type: Date,
-        required: true
+        validate: {
+            validator: function (value) {
+                // check if the value is a valid date and is not in the past
+                return value && value instanceof Date && value.getTime() >= Date.now();
+            },
+            message: props => `${props.value} is not a valid future date`
+        }
     },
     id: { type: String, unique: true },
     /*id: {

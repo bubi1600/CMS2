@@ -6,6 +6,8 @@ const cors = require('cors');
 require('dotenv/config');
 const authJwt = require('./helpers/jwt');
 const errorHandler = require('./helpers/error-handler');
+const cron = require('node-cron');
+const removeExpiredProducts = require('./routes/removeExpiredProducts');
 
 app.use(morgan('dev'));
 app.use(cors());
@@ -51,6 +53,21 @@ mongoose.connect(process.env.CONNECTION_STRING, {
         console.log(err);
     })
 mongoose.set("useCreateIndex", true);
+
+// Set up the cron job to delete expired products every day at midnight
+cron.schedule('0 0 * * *', async () => {
+    try {
+        const expiredProducts = await Product.find({ expiryDate: { $lt: new Date() } });
+        for (const product of expiredProducts) {
+            // Delete the product from the database
+            await product.remove();
+            // Update the ProductQuantity records of all users who have this product
+            await ProductQuantity.updateMany({ product: product._id }, { quantity: 0 });
+        }
+    } catch (err) {
+        console.error(err);
+    }
+});
 
 //Server
 app.listen(PORT, () => {
