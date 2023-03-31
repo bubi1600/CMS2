@@ -73,12 +73,10 @@ router.post(`/create`, /*uploadOptions.single('image'),*/ async (req, res) => {
         return res.status(500).send('Error retrieving category');
     }
 
-    if (user.isAdmin) {
-        const category = await Category.findById(user.category);
-        if (!category) {
-            return res.status(400).send('Invalid category');
-        }
-        product.category = category._id;
+    const productCategory = user.category; // Assuming the user making the request is an admin
+    const assignedCategory = await Category.findById(productCategory);
+    if (!assignedCategory) {
+        return res.status(400).send('Invalid category');
     }
 
     /*const file = req.file;
@@ -87,6 +85,7 @@ router.post(`/create`, /*uploadOptions.single('image'),*/ async (req, res) => {
     const fileName = file.filename;
     const basePath = `${req.protocol}://${req.get('host')}/tmp`;
     const fullPath = path.join(basePath, fileName);*/
+
     try {
         let product = new Product({
             _id: new mongoose.Types.ObjectId(),
@@ -95,10 +94,9 @@ router.post(`/create`, /*uploadOptions.single('image'),*/ async (req, res) => {
             //image: fullPath, // "http://localhost:3000/public/upload/image-2323232"
             //brand: req.body.brand,
             quantity: req.body.quantity,
-            category: req.body.category,
+            category: assignedCategory._id,
             expiryDate: req.body.expiryDate
         });
-
 
         product = await product.save();
         if (!product) return res.status(500).send('The product cannot be created');
