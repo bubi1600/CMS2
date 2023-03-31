@@ -46,7 +46,6 @@ router.get(`/`, async (req, res) => {
     } else {
         res.status(200).json({ success: true, products });
     }
-    res.json({ products });
 });
 
 router.get(`/read/:productID`, async (req, res) => {
