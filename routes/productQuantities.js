@@ -40,10 +40,9 @@ router.get('/:userId', async (req, res) => {
 
   if (!productQuantities) {
     return res.status(500).send('The product quantities could not be retrieved.');
-  }
-
-  res.json({ count: productQuantities.length, productQuantities });
-})
+  } else {
+    res.status(200).json({ success: true, count: productQuantities.length, productQuantities });
+  })
 
 /*router.get('/:userId', async (req, res) => {
   const _id = req.params.userID;
