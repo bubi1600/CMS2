@@ -73,6 +73,14 @@ router.post(`/create`, /*uploadOptions.single('image'),*/ async (req, res) => {
         return res.status(500).send('Error retrieving category');
     }
 
+    if (user.isAdmin) {
+        const category = await Category.findById(user.category);
+        if (!category) {
+            return res.status(400).send('Invalid category');
+        }
+        product.category = category._id;
+    }
+
     /*const file = req.file;
     if (!file) return res.status(400).send('No image in the request');
  
@@ -91,13 +99,6 @@ router.post(`/create`, /*uploadOptions.single('image'),*/ async (req, res) => {
             expiryDate: req.body.expiryDate
         });
 
-        if (user.isAdmin) {
-            const category = await Category.findById(user.category);
-            if (!category) {
-                return res.status(400).send('Invalid category');
-            }
-            product.category = category._id;
-        }
 
         product = await product.save();
         if (!product) return res.status(500).send('The product cannot be created');
