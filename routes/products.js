@@ -43,6 +43,8 @@ router.get(`/`, async (req, res) => {
 
     if (!products) {
         res.status(500).json({ success: false });
+    } else {
+        res.status(200).json({ success: true, products });
     }
     res.json({ products });
 });
