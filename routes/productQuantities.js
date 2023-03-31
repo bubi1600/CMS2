@@ -27,22 +27,29 @@ const mongoose = require('mongoose');
 });*/
 
 router.get('/:userId', async (req, res) => {
-  const productQuantities = await ProductQuantity
-    .find({ user: req.params.userId })
-    .populate({
-      path: 'product',
-      select: 'name description category',
-      populate: {
-        path: 'category',
-        select: 'name'
-      }
-    })
+  try {
+    const productQuantities = await ProductQuantity
+      .find({ user: req.params.userId })
+      .populate({
+        path: 'product',
+        select: 'name description',
+        populate: {
+          path: 'category',
+          select: 'name'
+        }
+      });
 
-  if (!productQuantities) {
-    return res.status(500).send('The product quantities could not be retrieved.');
-  } else {
+    if (!productQuantities) {
+      return res.status(500).send('The product quantities could not be retrieved.');
+    }
+
     res.status(200).json({ success: true, count: productQuantities.length, productQuantities });
-  })
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
+});
+
 
 /*router.get('/:userId', async (req, res) => {
   const _id = req.params.userID;
