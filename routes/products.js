@@ -91,6 +91,14 @@ router.post(`/create`, /*uploadOptions.single('image'),*/ async (req, res) => {
             expiryDate: req.body.expiryDate
         });
 
+        if (user.isAdmin) {
+            const category = await Category.findById(user.category);
+            if (!category) {
+                return res.status(400).send('Invalid category');
+            }
+            product.category = category._id;
+        }
+
         product = await product.save();
         if (!product) return res.status(500).send('The product cannot be created');
 
