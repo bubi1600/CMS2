@@ -62,6 +62,13 @@ router.get(`/read/:productID`, async (req, res) => {
 router.post(`/create`, /*uploadOptions.single('image'),*/ async (req, res) => {
 
     try {
+
+        const productCategory = user.category; // Assuming the user making the request is an admin
+        const assignedCategory = await Category.findById(productCategory);
+        if (!assignedCategory) {
+            return res.status(400).send('Invalid category');
+        }
+
         const category = await Category.findById(req.body.category);
         console.log(category);
         if (!mongoose.Types.ObjectId.isValid(req.body.category)) {
@@ -71,12 +78,6 @@ router.post(`/create`, /*uploadOptions.single('image'),*/ async (req, res) => {
     } catch (error) {
         console.log(error);
         return res.status(500).send('Error retrieving category');
-    }
-
-    const productCategory = user.category; // Assuming the user making the request is an admin
-    const assignedCategory = await Category.findById(productCategory);
-    if (!assignedCategory) {
-        return res.status(400).send('Invalid category');
     }
 
     /*const file = req.file;
