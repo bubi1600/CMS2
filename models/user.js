@@ -41,7 +41,11 @@ const userSchema = new mongoose.Schema({
     country: {
         type: String,
         default: ''
-    }
+    },
+    category: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category'
+    },
 
 });
 

@@ -33,7 +33,7 @@ const productSchema = mongoose.Schema({
         type: Date,
         default: Date.now,
     },
-    /*expiryDate: {
+    expiryDate: {
         type: Date,
         validate: {
             validator: function (value) {
@@ -42,7 +42,7 @@ const productSchema = mongoose.Schema({
             },
             message: props => `${props.value} is not a valid future date`
         }
-    },*/
+    },
     id: { type: String, unique: true },
     /*id: {
         type: mongoose.Schema.Types.ObjectId,
