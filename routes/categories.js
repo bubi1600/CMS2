@@ -1,4 +1,5 @@
 const { Category } = require('../models/category');
+const { User } = require('../models/user');
 const express = require('express');
 const { Mongoose } = require('mongoose');
 const router = express.Router();
@@ -11,6 +12,19 @@ router.get(`/`, async (req, res) => {
         res.status(500).json({ success: false })
     }
     res.status(200).json({ categories });
+})
+
+router.get(`/:userId`, async (req, res) => {
+    try {
+        const userCategories = await User.find().select('category');
+        if (!userCategories) {
+            return res.status(404).json({ success: false, message: 'Categories not found' });
+        }
+        res.status(200).json({ success: true, categories: userCategories });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
 })
 
 router.post('/create', async (req, res) => {

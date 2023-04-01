@@ -62,13 +62,6 @@ router.get(`/read/:productID`, async (req, res) => {
 router.post(`/create`, /*uploadOptions.single('image'),*/ async (req, res) => {
 
     try {
-
-        const productCategory = user.category; // Assuming the user making the request is an admin
-        const assignedCategory = await Category.findById(productCategory);
-        if (!assignedCategory) {
-            return res.status(400).send('Invalid category');
-        }
-
         const category = await Category.findById(req.body.category);
         console.log(category);
         if (!mongoose.Types.ObjectId.isValid(req.body.category)) {
@@ -86,7 +79,6 @@ router.post(`/create`, /*uploadOptions.single('image'),*/ async (req, res) => {
     const fileName = file.filename;
     const basePath = `${req.protocol}://${req.get('host')}/tmp`;
     const fullPath = path.join(basePath, fileName);*/
-
     try {
         let product = new Product({
             _id: new mongoose.Types.ObjectId(),
@@ -95,7 +87,7 @@ router.post(`/create`, /*uploadOptions.single('image'),*/ async (req, res) => {
             //image: fullPath, // "http://localhost:3000/public/upload/image-2323232"
             //brand: req.body.brand,
             quantity: req.body.quantity,
-            category: assignedCategory._id,
+            category: req.body.category,
             expiryDate: req.body.expiryDate
         });
 
