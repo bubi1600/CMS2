@@ -23,7 +23,7 @@ router.get('/:userId', async (req, res) => {
         }
 
         const category = user.category;
-        res.status(200).json({ category._id, category.name });
+        res.status(200).json({ category: { id: category._id, name: category.name } });
 
     } catch (error) {
         console.error(error);
