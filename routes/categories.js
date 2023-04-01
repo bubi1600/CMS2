@@ -14,18 +14,23 @@ router.get(`/`, async (req, res) => {
     res.status(200).json({ categories });
 })
 
-router.get(`/:userId`, async (req, res) => {
+router.get('/:userId', async (req, res) => {
     try {
-        const userCategories = await User.find().select('category');
-        if (!userCategories) {
-            return res.status(404).json({ success: false, message: 'Categories not found' });
+        const user = await User.findById(req.params.userId).populate('category', '_id name');
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
         }
-        res.status(200).json({ success: true, categories: userCategories });
-    } catch (err) {
-        console.error(err);
+
+        const category = user.category;
+        res.status(200).json({ category: { id: category._id, name: category.name } });
+
+    } catch (error) {
+        console.error(error);
         res.status(500).json({ success: false, message: 'Server error' });
     }
-})
+});
+
 
 router.post('/create', async (req, res) => {
     let category = new Category({
