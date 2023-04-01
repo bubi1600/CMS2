@@ -28,15 +28,14 @@ router.get('/:userId', async (req, res) => {
             return res.status(404).json({ success: false, message: 'User not found' });
         }
 
-        const categories = await Category.find({ user: user._id });
-
-        res.status(200).json({ success: true, categories });
+        res.status(200).json({ success: true, category: user.category });
 
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: 'Server error' });
     }
 });
+
 
 
 router.post('/create', async (req, res) => {
