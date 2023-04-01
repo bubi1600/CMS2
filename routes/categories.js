@@ -22,13 +22,14 @@ router.get(`/`, async (req, res) => {
 
 router.get('/:userId', async (req, res) => {
     try {
-        const user = await User.findById(req.params.userId).populate('category');
+        const user = await User.findById(req.params.userId);
 
         if (!user) {
             return res.status(404).json({ success: false, message: 'User not found' });
         }
 
-        const categories = user.category;
+        const categories = await Category.find({ user: user._id });
+
         res.status(200).json({ success: true, categories });
 
     } catch (error) {
