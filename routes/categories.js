@@ -28,8 +28,8 @@ router.get('/:userId', async (req, res) => {
             return res.status(404).json({ success: false, message: 'User not found' });
         }
 
-        const category = user.category;
-        res.status(200).json({ success: true, category });
+        const categories = user.category;
+        res.status(200).json({ success: true, categories });
 
     } catch (error) {
         console.error(error);
