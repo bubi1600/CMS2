@@ -42,11 +42,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
-    category: {
+    category: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category'
-    },
-
+    }],
 });
 
 userSchema.virtual('id').get(function () {
