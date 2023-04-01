@@ -13,7 +13,7 @@ router.get(`/`, async (req, res) => {
             res.status(500).json({ success: false })
         }
 
-        res.status(200).json({ categories });
+        res.status(200).json({ success: true, categories });
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, error: 'Error retrieving categories' })
@@ -29,7 +29,7 @@ router.get('/:userId', async (req, res) => {
         }
 
         const category = user.category;
-        res.status(200).json({ category });
+        res.status(200).json({ success: true, category });
 
     } catch (error) {
         console.error(error);
