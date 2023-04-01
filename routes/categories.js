@@ -6,12 +6,18 @@ const router = express.Router();
 const mongoose = require('mongoose');
 
 router.get(`/`, async (req, res) => {
-    const categories = await Category.find();
+    try {
+        const categories = await Category.find();
 
-    if (!categories) {
-        res.status(500).json({ success: false })
+        if (!categories) {
+            res.status(500).json({ success: false })
+        }
+
+        res.status(200).json({ categories });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, error: 'Error retrieving categories' })
     }
-    res.status(200).json({ categories });
 })
 
 router.get('/:userId', async (req, res) => {
