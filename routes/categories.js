@@ -16,14 +16,14 @@ router.get(`/`, async (req, res) => {
 
 router.get('/:userId', async (req, res) => {
     try {
-        const user = await User.findById(req.params.userId).populate('category', '_id name');
+        const user = await User.findById(req.params.userId).populate('category');
 
         if (!user) {
             return res.status(404).json({ success: false, message: 'User not found' });
         }
 
         const category = user.category;
-        res.status(200).json({ category: { id: category._id, name: category.name } });
+        res.status(200).json({ category });
 
     } catch (error) {
         console.error(error);
