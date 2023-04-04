@@ -109,6 +109,7 @@ router.post(`/create`, /*uploadOptions.single('image'),*/ async (req, res) => {
                     product: product._id,
                     quantity: req.body.quantity,
                     user: user._id,
+                    expiryDate: req.body.expiryDate // Set the expiry date to the same as the new product
                 });
                 await productQuantity.save();
             } else {
@@ -116,6 +117,7 @@ router.post(`/create`, /*uploadOptions.single('image'),*/ async (req, res) => {
                 if (existingProductQuantity.quantity > 10) {
                     existingProductQuantity.quantity = 10;
                 }
+                existingProductQuantity.expiryDate = req.body.expiryDate; // Set the expiry date to the same as the new product
                 await existingProductQuantity.save();
             }
         }

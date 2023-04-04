@@ -15,6 +15,10 @@ const productQuantitySchema = mongoose.Schema({
         ref: 'User',
         required: true,
     },
+    expiryDate: {
+        type: Date,
+        required: true,
+    },
 });
 
 exports.ProductQuantity = mongoose.model('ProductQuantity', productQuantitySchema);
