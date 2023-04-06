@@ -6,17 +6,15 @@ async function removeExpiredProducts() {
         // Find all products that are expired
         const expiredProducts = await Product.find({ expiryDate: { $lte: new Date() } });
 
-        // Remove expired products and their corresponding product quantities
+        // Remove expired products and their associated product quantities
         for (const product of expiredProducts) {
-            const { deletedCount } = await ProductQuantity.deleteMany({ product: product._id });
-            console.log(`Removed ${deletedCount} product quantity records for product ${product.name} (ID: ${product._id})`);
-            await product.remove();
-            console.log(`Removed expired product ${product.name} (ID: ${product._id})`);
+            await ProductQuantity.deleteMany({ product: product._id }); // delete associated product quantities
+            await product.remove(); // remove product
         }
 
-        console.log(`Removed ${expiredProducts.length} expired products`);
+        console.log(`Removed ${expiredProducts.length} expired products and their associated product quantities`);
     } catch (error) {
-        console.error(`Error removing expired products: ${error}`);
+        console.error(`Error removing expired products and their associated product quantities: ${error}`);
     }
 }
 
