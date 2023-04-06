@@ -3,6 +3,7 @@ const router = express.Router();
 //const { Order } = require('../models/order');
 const { Product } = require('../models/product');
 const { ProductQuantity } = require('../models/productQuantity');
+const { ProductHistory } = require('../models/productHistory');
 const { User } = require('../models/user');
 //const { OrderItem } = require('../models/order-item');
 const mongoose = require('mongoose');
