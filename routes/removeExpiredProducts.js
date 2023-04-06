@@ -4,26 +4,17 @@ const { ProductQuantity } = require('../models/productQuantity');
 async function removeExpiredProducts() {
     try {
         // Find all products that are expired
-        const expiredProducts = await Product.find({
-            expiryDate: { $lte: new Date() },
-        });
+        const expiredProducts = await Product.find({ expiryDate: { $lte: new Date() } });
 
-        // Find all product quantities associated with the expired products
-        const expiredProductQuantities = await ProductQuantity.find({
-            product: { $in: expiredProducts.map((p) => p._id) },
-        });
-
-        // Remove the product quantities
-        for (const productQuantity of expiredProductQuantities) {
-            await productQuantity.remove();
-        }
-
-        // Remove the expired products
+        // Remove expired products and their corresponding product quantities
         for (const product of expiredProducts) {
+            const { deletedCount } = await ProductQuantity.deleteMany({ product: product._id });
+            console.log(`Removed ${deletedCount} product quantity records for product ${product.name} (ID: ${product._id})`);
             await product.remove();
+            console.log(`Removed expired product ${product.name} (ID: ${product._id})`);
         }
 
-        console.log(`Removed ${expiredProducts.length} expired products and ${expiredProductQuantities.length} product quantities`);
+        console.log(`Removed ${expiredProducts.length} expired products`);
     } catch (error) {
         console.error(`Error removing expired products: ${error}`);
     }
