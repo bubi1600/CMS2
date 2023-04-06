@@ -26,6 +26,4 @@ const productHistorySchema = new mongoose.Schema({
     }
 });
 
-const ProductHistory = mongoose.model('ProductHistory', productHistorySchema);
-
-module.exports = { ProductHistory };
+exports.ProductHistory = mongoose.model('ProductHistory', productHistorySchema);
