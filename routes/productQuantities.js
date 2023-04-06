@@ -85,7 +85,7 @@ router.delete('/:userId/:productId', async (req, res) => {
 
   // Save product quantity history with the product name and current date
   const productHistory = new ProductHistory({
-    product: productQuantity.product.name,
+    product: productQuantity.product,
     user: userId,
     quantity: 1,
     action: 'remove',
