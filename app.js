@@ -58,7 +58,7 @@ mongoose.connect(process.env.CONNECTION_STRING, {
 mongoose.set("useCreateIndex", true);
 
 // Schedule the removeExpiredProducts function to run every day at midnight
-setInterval(removeExpiredProducts, 24 * 60 * 60 * 1000); // 24 hours in milliseconds
+cron.schedule('0 0 * * *', removeExpiredProducts); // Runs at 00:00 (midnight) every day
 
 //Server
 app.listen(PORT, () => {
