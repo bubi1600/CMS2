@@ -82,13 +82,31 @@ router.delete('/:userId/:productId', async (req, res) => {
     return res.status(404).send('Product quantity not found for user and product.');
   }
 
+  // Save product quantity history with the product name and current date
+  const productHistory = new ProductHistory({
+    product: productQuantity.product.name,
+    user: userId,
+    quantity: 1,
+    action: 'remove',
+    date: new Date()
+  });
+
+  await productHistory.save();
+
   // Decrement the quantity by 1 if it's not already 0
   if (productQuantity.quantity > 0) {
     productQuantity.quantity--;
-    await productQuantity.save();
+
+    if (productQuantity.quantity === 0) {
+      // Remove the product quantity if it's zero
+      await productQuantity.remove();
+    } else {
+      // Otherwise, save the updated product quantity
+      await productQuantity.save();
+    }
   }
 
-  res.send('Product quantity updated successfully.');
+  res.json('Product quantity updated successfully.');
 });
 
 

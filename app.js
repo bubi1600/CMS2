@@ -7,7 +7,6 @@ require('dotenv/config');
 const authJwt = require('./helpers/jwt');
 const errorHandler = require('./helpers/error-handler');
 const cron = require('node-cron');
-const removeExpiredProducts = require('./routes/removeExpiredProducts');
 
 app.use(morgan('dev'));
 app.use(cors());
@@ -21,11 +20,14 @@ app.use('/tmp', express.static(__dirname + '/tmp'));
 app.use(errorHandler);
 
 //Routes
+const removeExpiredProducts = require('./routes/removeExpiredProducts');
 const categoriesRoutes = require('./routes/categories');
 const productsRoutes = require('./routes/products');
 const usersRoutes = require('./routes/users');
 const ordersRoutes = require('./routes/orders');
 const productQuantitiesRoutes = require('./routes/productQuantities');
+const productHistoryRoutes = require('./routes/productHistory');
+const { removeExpiredProducts } = require('./routes/removeExpiredProducts');
 
 const api = process.env.API_URL;
 const PORT = process.env.PORT || 3000
@@ -35,6 +37,7 @@ app.use(`${api}/products`, productsRoutes);
 app.use(`${api}/users`, usersRoutes);
 app.use(`${api}/orders`, ordersRoutes);
 app.use(`${api}/productQuantities`, productQuantitiesRoutes);
+app.use(`${api}/productHistory`, productHistoryRoutes);
 
 //Database
 mongoose.connect(process.env.CONNECTION_STRING, {
@@ -54,20 +57,8 @@ mongoose.connect(process.env.CONNECTION_STRING, {
     })
 mongoose.set("useCreateIndex", true);
 
-// Set up the cron job to delete expired products every day at midnight
-cron.schedule('0 0 * * *', async () => {
-    try {
-        const expiredProducts = await Product.find({ expiryDate: { $lt: new Date() } });
-        for (const product of expiredProducts) {
-            // Delete the product from the database
-            await product.remove();
-            // Update the ProductQuantity records of all users who have this product
-            await ProductQuantity.updateMany({ product: product._id }, { quantity: 0 });
-        }
-    } catch (err) {
-        console.error(err);
-    }
-});
+// Schedule the removeExpiredProducts function to run every day at midnight
+setInterval(removeExpiredProducts, 24 * 60 * 60 * 1000); // 24 hours in milliseconds
 
 //Server
 app.listen(PORT, () => {
