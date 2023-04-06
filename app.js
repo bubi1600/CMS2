@@ -27,7 +27,7 @@ const usersRoutes = require('./routes/users');
 const ordersRoutes = require('./routes/orders');
 const productQuantitiesRoutes = require('./routes/productQuantities');
 const productHistoryRoutes = require('./routes/productHistory');
-const removeExpiredProducts = require('./routes/removeExpiredProducts');
+//const removeExpiredProducts = require('./routes/removeExpiredProducts');
 
 const api = process.env.API_URL;
 const PORT = process.env.PORT || 3000
