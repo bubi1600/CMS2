@@ -7,28 +7,24 @@ const { Product } = require('../models/product');
 const { User } = require('../models/user');
 
 router.get('/:userId', async (req, res) => {
-    const { userId } = req.params;
-
-    console.log(`Fetching product history for user ID: ${userId}`);
-
-    // Check if the user ID is a valid ObjectId
-    if (!mongoose.isValidObjectId(userId)) {
-        console.log(`Invalid user ID: ${userId}`);
-        return res.status(400).send('Invalid user ID.');
-    }
-
     try {
-        // Find all product history for the user
-        const productHistories = await ProductHistory.find({ user: userId });
+        const productHistories = await ProductHistory
+            .find({ user: req.params.userId })
+            .populate('product');
 
         console.log(`Found ${productHistories.length} product history records for user ID: ${userId}`);
 
-        res.json(productHistories);
-    } catch (error) {
-        console.error(`Error getting product history: ${error}`);
-        res.status(500).send('Internal server error');
+        if (!productHistories) {
+            return res.status(500).send('The product histories could not be retrieved.');
+        }
+
+        res.status(200).json({ success: true, count: productHistories.length, productHistories });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
     }
 });
+
 
 
 module.exports = router;
