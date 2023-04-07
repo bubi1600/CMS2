@@ -9,8 +9,11 @@ const { User } = require('../models/user');
 router.get('/:userId', async (req, res) => {
     const { userId } = req.params;
 
+    console.log(`Fetching product history for user ID: ${userId}`);
+
     // Check if the user ID is a valid ObjectId
     if (!mongoose.isValidObjectId(userId)) {
+        console.log(`Invalid user ID: ${userId}`);
         return res.status(400).send('Invalid user ID.');
     }
 
@@ -18,11 +21,14 @@ router.get('/:userId', async (req, res) => {
         // Find all product history for the user
         const productHistory = await ProductHistory.find({ user: userId });
 
+        console.log(`Found ${productHistory.length} product history records for user ID: ${userId}`);
+
         res.json(productHistory);
     } catch (error) {
         console.error(`Error getting product history: ${error}`);
         res.status(500).send('Internal server error');
     }
 });
+
 
 module.exports = router;
