@@ -37,7 +37,7 @@ app.use(`${api}/products`, productsRoutes);
 app.use(`${api}/users`, usersRoutes);
 app.use(`${api}/orders`, ordersRoutes);
 app.use(`${api}/productQuantities`, productQuantitiesRoutes);
-app.use(`${api}/productHistory`, productHistoryRoutes);
+app.use(`${api}/productHistories`, productHistoryRoutes);
 
 //Database
 mongoose.connect(process.env.CONNECTION_STRING, {
