@@ -12,8 +12,6 @@ router.get('/:userId', async (req, res) => {
             .find({ user: req.params.userId })
             .populate('product');
 
-        console.log(`Found ${productHistories.length} product history records for user ID: ${userId}`);
-
         if (!productHistories) {
             return res.status(500).send('The product histories could not be retrieved.');
         }
