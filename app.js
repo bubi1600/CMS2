@@ -26,7 +26,7 @@ const productsRoutes = require('./routes/products');
 const usersRoutes = require('./routes/users');
 const ordersRoutes = require('./routes/orders');
 const productQuantitiesRoutes = require('./routes/productQuantities');
-const productHistoryRoutes = require('./routes/productHistory');
+const productHistoriesRoutes = require('./routes/productHistories');
 //const removeExpiredProducts = require('./routes/removeExpiredProducts');
 
 const api = process.env.API_URL;
@@ -37,7 +37,7 @@ app.use(`${api}/products`, productsRoutes);
 app.use(`${api}/users`, usersRoutes);
 app.use(`${api}/orders`, ordersRoutes);
 app.use(`${api}/productQuantities`, productQuantitiesRoutes);
-app.use(`${api}/productHistories`, productHistoryRoutes);
+app.use(`${api}/productHistories`, productHistoriesRoutes);
 
 //Database
 mongoose.connect(process.env.CONNECTION_STRING, {
