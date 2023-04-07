@@ -19,7 +19,7 @@ router.get('/:userId', async (req, res) => {
 
     try {
         // Find all product history for the user
-        const productHistories = await productHistory.find({ user: userId });
+        const productHistories = await ProductHistory.find({ user: userId });
 
         console.log(`Found ${productHistories.length} product history records for user ID: ${userId}`);
 
