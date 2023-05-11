@@ -15,5 +15,14 @@ router.post('/test', async (req, res) => {
 
     res.send(test);
 })
+router.get(`/`, async (req, res) => {
+
+    try {
+        const tests = await Test.find();
+        res.send(tests);
+    } catch (error) {
+        res.status(500).send('Error retrieving tests');
+    }
+});
 
 module.exports = router;
